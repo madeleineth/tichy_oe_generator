@@ -4,43 +4,40 @@ use locale;
 use Unicode::UCD 'charinfo';
 use Encode 'decode_utf8';
 use Data::Dump qw(dump);
+use Getopt::Long;
 binmode(STDOUT, ":utf8");
 
 #- OPENING & READING FILES -----------------------------------------------------------------------------------------------
 sub open_files {
-    my $mydictionary_file       = "input/dict_adj-vb-part-num-adv-noun.txt";
-    my $mymanualforms_file      = "input/manual_forms.txt";
-    my $myverbal_paradigms_file = "input/para_vb.txt";
-    my $myprefixes_file         = "input/prefixes.txt";
-    my $myoutput_file           = "output/output.txt";
+    my ($args) = @_;
 
     # OPENS DICTIONARY FILE
-    open(INPUT, "<:utf8", $mydictionary_file) or die "Cannot open file: $mydictionary_file";
+    open(INPUT, "<:utf8", $args->{dictionary}) or die "Cannot open file: $args->{dictionary}";
     @lines = <INPUT>;
     close INPUT;
-    print "$mydictionary_file opened.\n";
+    print "$args->{dictionary} opened.\n";
 
     # OPENS MANUAL FORMS FILE
-    open(INPUT, "<:utf8", $mymanualforms_file) or die "Cannot open file: $mymanualforms_file";
+    open(INPUT, "<:utf8", $args->{'manual-forms'}) or die "Cannot open file: $args->{'manual-forms'}";
     @form_lines = <INPUT>;
     close INPUT;
-    print "$mymanualforms_file opened.\n";
+    print "$args->{'manual-forms'} opened.\n";
 
     # OPENS VERBAL PARADIGMS
-    open(INPUT, "<:utf8", $myverbal_paradigms_file) or die "Cannot open file: $myverbal_paradigms_file";
+    open(INPUT, "<:utf8", $args->{'verbal-paradigms'}) or die "Cannot open file: $args->{'verbal-paradigms'}";
     @vparadigm_lines = <INPUT>;
     close INPUT;
-    print "$myverbal_paradigms_file opened.\n";
+    print "$args->{'verbal-paradigms'} opened.\n";
 
     # OPENS LIST OF PREFIXES
-    open(INPUT, "<:utf8", $myprefixes_file) or die "Cannot open file: $myprefixes_file";
+    open(INPUT, "<:utf8", $args->{'prefixes'}) or die "Cannot open file: $args->{'prefixes'}";
     @prefix_input = <INPUT>;
     close INPUT;
-    print "$myprefixes_file opened.\n";
+    print "$args->{'prefixes'} opened.\n";
 
     # OPENS OUTPUT FILE
-    open(OUTPUT, "+>:utf8", $myoutput_file) or die "Cannot open file: $myoutput_file";
-    print "$myoutput_file opened.\n";
+    open(OUTPUT, "+>:utf8", $args->{output}) or die "Cannot open file: $args->{output}";
+    print "$args->{output} opened.\n";
 }
 
 # LOAD DICTIONARY FILE INTO A MULTIDIMENSIONAL ASSOCIATIVE ARRAY
@@ -627,7 +624,7 @@ sub set_verb_paradigm {
                 }
 
                 # g + ie + two cons. = gieldan
-                elsif (($prevowel eq "g") && ($vowel eq "ie") && ($post_vowel_length == 2)) {
+                elsif (($pre_vowel eq "g") && ($vowel eq "ie") && ($post_vowel_length == 2)) {
                     $assigned_paradigm = 63;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
 
@@ -880,7 +877,6 @@ sub set_adj_paradigm {
                       )
                     {
                         $mywords[$i]{adj_paradigm}[0] = $mywords[$y]{adj_paradigm}[0];
-                        print;
                     }
 
                 }
@@ -10051,12 +10047,20 @@ sub printoutforms {
 
 #- RUN THE SUBROUTINES ------------------------------------------------------------------------------------------
 
-$| = 1;
 @forms;
+
+my %files = (
+    'dictionary'       => "dict_adj-vb-part-num-adv-noun.txt",
+    'manual-forms'     => "manual_forms.txt",
+    'verbal-paradigms' => "para_vb.txt",
+    'prefixes'         => "prefixes.txt",
+    'output'           => "output.txt"
+);
+GetOptions(\%files, 'dictionary=s', 'manual-forms=s', 'verbal-paradigms=s', 'prefixes=s', 'output=s');
 
 $start = time();
 print "\nOpening files...\n";
-open_files();
+open_files(\%files);
 print "\nLoading the dictionary...";
 load_dictionary();
 print "Dictionary loaded in ";
