@@ -12,25 +12,25 @@ sub open_files {
     my ($args) = @_;
 
     # OPENS DICTIONARY FILE
-    open(INPUT, "<:utf8", $args->{dictionary}) or die "Cannot open file: $args->{dictionary}";
+    open(INPUT, "<:utf8:crlf", $args->{dictionary}) or die "Cannot open file: $args->{dictionary}";
     @lines = <INPUT>;
     close INPUT;
     print "$args->{dictionary} opened.\n";
 
     # OPENS MANUAL FORMS FILE
-    open(INPUT, "<:utf8", $args->{'manual-forms'}) or die "Cannot open file: $args->{'manual-forms'}";
+    open(INPUT, "<:utf8:crlf", $args->{'manual-forms'}) or die "Cannot open file: $args->{'manual-forms'}";
     @form_lines = <INPUT>;
     close INPUT;
     print "$args->{'manual-forms'} opened.\n";
 
     # OPENS VERBAL PARADIGMS
-    open(INPUT, "<:utf8", $args->{'verbal-paradigms'}) or die "Cannot open file: $args->{'verbal-paradigms'}";
+    open(INPUT, "<:utf8:crlf", $args->{'verbal-paradigms'}) or die "Cannot open file: $args->{'verbal-paradigms'}";
     @vparadigm_lines = <INPUT>;
     close INPUT;
     print "$args->{'verbal-paradigms'} opened.\n";
 
     # OPENS LIST OF PREFIXES
-    open(INPUT, "<:utf8", $args->{'prefixes'}) or die "Cannot open file: $args->{'prefixes'}";
+    open(INPUT, "<:utf8:crlf", $args->{'prefixes'}) or die "Cannot open file: $args->{'prefixes'}";
     @prefix_input = <INPUT>;
     close INPUT;
     print "$args->{'prefixes'} opened.\n";
