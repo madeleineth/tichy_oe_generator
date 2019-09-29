@@ -375,7 +375,7 @@ sub set_verb_paradigm {
             if ($verbs_mywords[$i]{vb_paradigm}[0]) { push(@assigned_mywords, $verbs_mywords[$i]); }
         }
     }
-    print scalar(@assigned_mywords) . " verbs verbs assigned as examples and by stem comparison.\n";
+    print STDERR scalar(@assigned_mywords) . " verbs verbs assigned as examples and by stem comparison.\n";
 
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) { push(@unassigned_verbs_mywords, $verbs_mywords[$i]) }
@@ -397,7 +397,7 @@ sub set_verb_paradigm {
             if ($verbs_mywords[$i]{vb_paradigm}[0]) { push(@assigned_mywords, $verbs_mywords[$i]); }
         }
     }
-    print scalar(@assigned_mywords) . " verbs assigned as paradigm examples, by stem comparison and by Wright\n";
+    print STDERR scalar(@assigned_mywords) . " verbs assigned as paradigm examples, by stem comparison and by Wright\n";
 
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) { push(@unassigned_verbs_mywords, $verbs_mywords[$i]) }
@@ -478,7 +478,7 @@ sub set_verb_paradigm {
             if ($verbs_mywords[$i]{vb_paradigm}[0]) { push(@assigned_mywords, $verbs_mywords[$i]); }
         }
     }
-    print scalar(@assigned_mywords) . " verbs verbs assigned as examples, by Wright and by stem comparison.\n";
+    print STDERR scalar(@assigned_mywords) . " verbs verbs assigned as examples, by Wright and by stem comparison.\n";
 
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) { push(@unassigned_verbs_mywords, $verbs_mywords[$i]) }
@@ -3984,8 +3984,6 @@ sub generate_adjforms {
             #STRONG
             unless ($mywords[$i]{numeral} == 1) {
 
-                # template :LEMMA | STEM | BT-ID | WORDCLASS | GRADE | CLASS |
-                # SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
                 %formhash = (
                     "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
                     "BT", $bt_id, "wordclass", "adjective",
@@ -6502,7 +6500,6 @@ sub generate_adjforms {
                 #cycle through alt stems
                 for my $y (0 .. $#title_array) {
 
-  # template :LEMMA | STEM | BT-ID | WORDCLASS | GRADE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
                     %formhash = (
                         "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
                         "BT", $bt_id, "wordclass", "adjective",
@@ -6810,7 +6807,6 @@ sub generate_adjforms {
                 @title_array = keys %hash;
                 for my $y (0 .. $#title_array) {
 
-   # template :LEMMA | STEM | BT-ID | WORDCLASS | TYPE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
                     my %formhash = (
                         "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
                         "BT", $bt_id, "wordclass", "adjective",
@@ -7114,7 +7110,6 @@ sub generate_adjforms {
                 @title_array = keys %hash;
                 for my $y (0 .. $#title_array) {
 
-   # template :LEMMA | STEM | BT-ID | WORDCLASS | TYPE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
                     %formhash = (
                         "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
                         "BT", $bt_id, "wordclass", "adjective",
@@ -7374,8 +7369,6 @@ sub generate_adjforms {
                     print_form({%formhash});
 
                     #SUPERLATIVE STRONG
-                    # template :LEMMA | STEM | BT-ID | WORDCLASS | TYPE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID |
-                    # WRIGHT | VARIANT-ID
                     %formhash = (
                         "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
                         "BT", $bt_id, "wordclass", "adjective",
@@ -7763,7 +7756,6 @@ sub generate_advforms {
         if ($mywords[$i]{adverb} == 1) {    #IS IT AN ADVERB?
             my $bt_id = sprintf("%06d", $mywords[$i]{nid});
 
-            # template
             my %formhash = (
                 "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
                 "BT", $bt_id, "wordclass", "adverb",
@@ -8392,19 +8384,16 @@ sub generate_vbforms {
 
     #CYCLE WORDS & PARADIGMS
     for my $i (0 .. $#mywords) {
-        foreach (@{ $mywords[$i]{vb_paradigm} }) {
+        foreach my $vpara (@{ $mywords[$i]{vb_paradigm} }) {
             my $probability = 0;
-            my $type = $_->{type};
-            my $class = $_->{class};
-            my $subclass = $_->{subclass};
-            my $title = $_->{title};
-            my $ID = $_->{ID};
-            my $wright = $_->{wright};
+            my $type = $vpara->{type};
+            my $class = $vpara->{class};
+            my $subclass = $vpara->{subclass};
+            my $title = $vpara->{title};
+            my $ID = $vpara->{ID};
+            my $wright = $vpara->{wright};
             my $bt_id = sprintf("%06d", $mywords[$i]{nid});
 
-# output template for all verbs:LEMMA | STEM | BT-ID | WORDCLASS | VERB-TYPE | VERB-CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT |
-            my $form_template_header =
-              "$mywords[$i]{title}\t$mywords[$i]{stem}\t$bt_id\tverb\t$type\t$class\t$subclass\t$title\t$ID\t$wright\t";
             %formhash = (
                 "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
                 "BT", $bt_id, "wordclass", "verb",
@@ -8414,27 +8403,25 @@ sub generate_vbforms {
             );
 
             #we will need the boundary of the infinitive of the 0 variant for determining post-vowel
-            my $boundary_inf = $_->{variant}[0]{if}{boundary};
-            my $vowel_inf = $_->{variant}[0]{if}{vowel};
-            my $vowel_pa = $_->{variant}[0]{painsg1}{vowel};
+            my $boundary_inf = $vpara->{variant}[0]{if}{boundary};
+            my $vowel_inf = $vpara->{variant}[0]{if}{vowel};
+            my $vowel_pa = $vpara->{variant}[0]{painsg1}{vowel};
 
             #CYCLE VARIANTS
-            foreach (@{ $_->{variant} }) {
-                my $variantID = $_->{variantID};
+            foreach my $vrnt (@{ $vpara->{variant} }) {
+                my $variantID = $vrnt->{variantID};
 
-                # output template for this variant + VARIANT-ID
-                my $form_template_header = $form_template_header . "$variantID\t";
                 $formhash{"var"} = $variantID;
 
                 #CYCLE PARADIGM PARTS
-                while (my ($name, $item) = each %{$_}) {
+                while (my ($name, $item) = each %{$vrnt}) {
                     unless ($name eq "variantID") {
 
                         #IF A VERB HAS A PREFIX, IT WILL RUN TWICE, ONCE WITH IT, ONCE WITHOUT
                         my $prefix_count = 0;  # ???? Never changed.
-                        my $prefix = "";
-                        $prefix = $mywords[$i]{prefix};
-                        if ($prefix ne $item->{prefix}) { $prefix = $prefix . "-" . $item->{prefix}; }
+                        my $prefix = $mywords[$i]{prefix};
+                        my $variant_pfx = defined($item->{prefix}) ? $item->{prefix} : "";
+                        if ($prefix ne $variant_pfx) { $prefix = $prefix . "-" . $variant_pfx; }
                         my $paraID = $item->{paraID};
                         my $ending = $item->{ending};
                         my $boundary = $item->{boundary};
@@ -8479,8 +8466,6 @@ sub generate_vbforms {
 
                             for my $vcount (0 .. $#vowel) {
 
-                                #output template for this paradigm member + PARADIGM-PART
-                                my $form_header = $form_template_header . "$paraID";
                                 $formhash{"function"} = $paraID;
 
                                 # first output all parts of the paradigm that are defined in the paradigm dictionary
@@ -8973,8 +8958,6 @@ sub generate_vbforms {
                             $pre_vowel = defined($1) ? $1 : "";
                             my $dental = $item->{dental};
 
-                            #output template for this paradigm member + PARADIGM-PART
-                            my $form_header = $form_template_header . "$paraID";
                             $formhash{"function"} = $paraID;
 
                             # class 3 is manually defined
@@ -8985,7 +8968,6 @@ sub generate_vbforms {
                                 my $ending = $item->{ending};
                                 my $post_vowel = $item->{postVowel};
                                 my $pre_vowel = $item->{preVowel};
-                                my $form_header = $form_template_header . "$item->{paraID}";
                                 $formhash{"function"} = $paraID;
                                 my $probability = $prefix_count;
                                 my $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-$dental-$ending";
@@ -9606,8 +9588,7 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                             my $dental = $item->{dental};
                             my $ending = $item->{ending};
                             my $post_vowel = $item->{postVowel};
-                            my $pre_vowel = $item->{preVowel};
-                            my $form_header = $form_template_header . "$item->{paraID}";
+                            my $pre_vowel = defined($item->{preVowel}) ? $item->{preVowel} : "";
                             $formhash{"function"} = $paraID;
                             my $probability = $prefix_count;
                             my $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-$dental-$ending";
