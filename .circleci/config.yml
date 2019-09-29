@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  test:
     docker:
       - image: debian:buster
     steps:
@@ -11,3 +11,25 @@ jobs:
       - run:
           name: Test
           command: ./test.sh
+  generate:
+    docker:
+      - image: debian:buster
+    steps:
+      - checkout
+      - run:
+          name: Dependencies
+          command: ./circleci_install.sh
+      - run:
+          name: Build output
+          command: ./create_dict31.pl && bzip2 output.txt
+      - store_artifacts:
+          path: output.txt.bz2
+workflows:
+  version: 2
+  test_and_maybe_generate:
+    jobs:
+      - test
+      - generate:
+          filters:
+            branches:
+              only: master
