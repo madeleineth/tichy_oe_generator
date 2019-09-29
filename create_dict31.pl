@@ -3,7 +3,6 @@ use feature 'switch';
 use locale;
 use Unicode::UCD 'charinfo';
 use Encode 'decode_utf8';
-use Data::Dump qw(dump);
 use Getopt::Long;
 binmode(STDOUT, ":utf8");
 

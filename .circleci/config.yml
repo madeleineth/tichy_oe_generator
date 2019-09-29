@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: debian:buster
+    steps:
+      - checkout
+      - run:
+          name: Dependencies
+          command: ./circleci_install.sh
+      - run:
+          name: Test
+          command: ./test.sh
