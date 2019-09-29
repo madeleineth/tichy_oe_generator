@@ -8,32 +8,32 @@ binmode(STDOUT, ":utf8");
 
 #- OPENING & READING FILES -----------------------------------------------------------------------------------------------
 sub open_files {
-    my $mydictionary_file = "input/dict_adj-vb-part-num-adv-noun.txt";
-    my $mymanualforms_file = "input/manual_forms.txt";
-    my $myverbal_paradigms_file = "input/para_vb.txt";
-    my $myprefixes_file = "input/prefixes.txt";
-    my $myoutput_file = "output/output.txt";
+    my $mydictionary_file = "dict_adj-vb-part-num-adv-noun.txt";
+    my $mymanualforms_file = "manual_forms.txt";
+    my $myverbal_paradigms_file = "para_vb.txt";
+    my $myprefixes_file = "prefixes.txt";
+    my $myoutput_file = "output.txt";
 
     # OPENS DICTIONARY FILE
-    open(INPUT, "<:utf8", $mydictionary_file) or die "Cannot open file: $mydictionary_file";
+    open(INPUT, "<:utf8:crlf", $mydictionary_file) or die "Cannot open file: $mydictionary_file";
     @lines = <INPUT>;
     close INPUT;
     print "$mydictionary_file opened.\n";
 
     # OPENS MANUAL FORMS FILE
-    open(INPUT, "<:utf8", $mymanualforms_file) or die "Cannot open file: $mymanualforms_file";
+    open(INPUT, "<:utf8:crlf", $mymanualforms_file) or die "Cannot open file: $mymanualforms_file";
     @form_lines = <INPUT>;
     close INPUT;
     print "$mymanualforms_file opened.\n";
 
     # OPENS VERBAL PARADIGMS
-    open(INPUT, "<:utf8", $myverbal_paradigms_file) or die "Cannot open file: $myverbal_paradigms_file";
+    open(INPUT, "<:utf8:crlf", $myverbal_paradigms_file) or die "Cannot open file: $myverbal_paradigms_file";
     @vparadigm_lines = <INPUT>;
     close INPUT;
     print "$myverbal_paradigms_file opened.\n";
 
     # OPENS LIST OF PREFIXES
-    open(INPUT, "<:utf8", $myprefixes_file) or die "Cannot open file: $myprefixes_file";
+    open(INPUT, "<:utf8:crlf", $myprefixes_file) or die "Cannot open file: $myprefixes_file";
     @prefix_input = <INPUT>;
     close INPUT;
     print "$myprefixes_file opened.\n";
@@ -599,7 +599,7 @@ sub set_verb_paradigm {
                 }
 
                 # g + ie + two cons. = gieldan
-                elsif (($prevowel eq "g") && ($vowel eq "ie") && ($post_vowel_length == 2)) {
+                elsif (($pre_vowel eq "g") && ($vowel eq "ie") && ($post_vowel_length == 2)) {
                     $assigned_paradigm = 63;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
                 }
