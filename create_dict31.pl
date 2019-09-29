@@ -9583,11 +9583,11 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                         #PRETERITE-PRESENT & ANOMALOUS VERBS
                         if (($type eq "pp") || ($type eq "a")) {
-                            my $vowel = $item->{vowel};
-                            my $boundary = $item->{boundary};
-                            my $dental = $item->{dental};
-                            my $ending = $item->{ending};
-                            my $post_vowel = $item->{postVowel};
+                            my $vowel = defined($item->{vowel}) ? $item->{vowel} : "";
+                            my $boundary = defined($item->{boundary}) ? $item->{boundary} : "";
+                            my $dental = defined($item->{dental}) ? $item->{dental} : "";
+                            my $ending = defined($item->{ending}) ? $item->{ending} : "";
+                            my $post_vowel = defined($item->{postVowel}) ? $item->{postVowel} : "";
                             my $pre_vowel = defined($item->{preVowel}) ? $item->{preVowel} : "";
                             $formhash{"function"} = $paraID;
                             my $probability = $prefix_count;
