@@ -7,6 +7,7 @@ use Encode 'decode_utf8';
 use Data::Dump qw(dump);
 use Getopt::Long;
 binmode(STDOUT, ":utf8");
+binmode(STDERR, ":utf8");
 
 our $vowel_regex =
 qr/[\x{00E6}aeiyou\x{0153}\x{00C6}AEIYOU\x{0152}\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]"/;
@@ -58,11 +59,9 @@ sub print_manual_forms {
     my ($manual_forms_path) = @_;
     open(MANFORMS, "<:utf8:crlf", $manual_forms_path) or die "Cannot open file: $manual_forms_path";
     foreach my $forms_line (<MANFORMS>) {
-        print STDERR "orig formsline:'$forms_line'\n";
         chomp $forms_line;
         $forms_line = move_accents(eth2thorn($forms_line));
-        print STDERR "formsline:'$forms_line'\n";
-        my @splitarray = split(/\t/, $forms_line);
+        my @splitarray = split(/\t/, $forms_line, 16);
         my %form = ();
         $form{BT} = $splitarray[0];
         $form{title} = lc($splitarray[1]);
@@ -221,7 +220,7 @@ sub stem_length {
     my $mylength = 0;
     $mystem =~
 m/^.*?($vowel_regex$vowel_regex?)([^\x{00E6}aeiyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]*)(.*)/;
-    my $myvowel = $1;
+    my $myvowel = defined($1) ? $1 : "";
     my $myconsonants = "";
     my $mysecond = "";
     if ($3) { $mysecond = $3; }
@@ -494,8 +493,8 @@ sub set_verb_paradigm {
             # STRONG VERBS
             if ($verbs_mywords[$i]{vb_strong} == 1) {
                 $verbs_mywords[$i]{stem} =~ m/^($vowel_regex*?.*?)($vowel_regex$vowel_regex*)/;
-                my $pre_vowel = $1;
-                my $vowel = $2;
+                my $pre_vowel = defined($1) ? $1 : "";
+                my $vowel = defined($2) ? $2 : "";
                 $verbs_mywords[$i]{stem} =~
                   m/^$vowel_regex*?.*?$vowel_regex$vowel_regex*?($consonant_regex.*?)$vowel_regex/;
                 my $post_vowel = $1;
@@ -595,7 +594,7 @@ sub set_verb_paradigm {
             if ($verbs_mywords[$i]{vb_weak} == 1) {
                 $verbs_mywords[$i]{stem} =~ m/^($vowel_regex*?.*?)($vowel_regex$vowel_regex*)/;
                 my $pre_vowel = $1;
-                my $vowel = $2;
+                my $vowel = defined($2) ? $2 : "";
                 $verbs_mywords[$i]{stem} =~
                   m/^$vowel_regex*?.*?$vowel_regex$vowel_regex*?($consonant_regex.*?)$vowel_regex/;
                 my $post_vowel = $1;
@@ -729,7 +728,7 @@ sub set_verb_paradigm {
 # SET PARADIGMS FOR ADJECTIVES
 sub set_adj_paradigm {
     my @mywords = @_;
-    my $assignedcount;
+    my $assignedcount = 0;
     for my $i (0 .. $#mywords) {
         if ($mywords[$i]{stem} =~ m/feald$/) { $mywords[$i]{numeral} = 0; }
 
@@ -1011,7 +1010,7 @@ sub set_noun_paradigm {
         # NOW THOSE UNKNOWN TO WRIGHT - might be a good idea to detect a second prefix as with verbs?
         if ($counter == 0) {
             $mynouns[$i]{stem} =~ m/^($vowel_regex?$vowel_regex?.*?)($vowel_regex$vowel_regex?)/;
-            my $vowel = $2;
+            my $vowel = defined($2) ? $2 : "";
 
             #HEURISTICS
             # -a > weak
@@ -1069,7 +1068,7 @@ sub set_noun_paradigm {
             if ($counter) { push(@assigned_nouns, $mynouns[$i]); }
         }
     }
-    print STDERR "$#assigned_nouns  nouns assigned by Wright,  stem comparison and heuristics.\n";
+    print STDERR "$#assigned_nouns nouns assigned by Wright, stem comparison and heuristics.\n";
 
     #BY STEM COMPARISON WITH THOSE KNOWN FROM WRIGHT
     $assignednum = $#assigned_nouns;
@@ -1174,7 +1173,7 @@ sub generate_nounforms {
     for my $i (0 .. $#mywords) {
         my $bt_id = sprintf("%06d", $mywords[$i]{nid});
 
-        for my $i2 (0 .. scalar(@{ $mywords[$i]{noun_paradigm} })) {
+        for my $i2 (0 .. scalar($#{ $mywords[$i]{noun_paradigm} })) {
 
             #STRONG
             %formhash = (
@@ -1186,7 +1185,6 @@ sub generate_nounforms {
 
             # STAN
             if ($mywords[$i]{noun_paradigm}[$i2] =~ m/st\x{00E1}n|cynn/) {
-
                 #SgNo
                 $stem[0] = $mywords[$i]{stem};
                 if (($alt_stem = $stem[0]) =~ s/($consonant_regex)\1$/$1/) { push(@stem, $alt_stem); }
@@ -8395,7 +8393,7 @@ sub generate_vbforms {
     #CYCLE WORDS & PARADIGMS
     for my $i (0 .. $#mywords) {
         foreach (@{ $mywords[$i]{vb_paradigm} }) {
-            my $probability;
+            my $probability = 0;
             my $type = $_->{type};
             my $class = $_->{class};
             my $subclass = $_->{subclass};
@@ -8433,7 +8431,7 @@ sub generate_vbforms {
                     unless ($name eq "variantID") {
 
                         #IF A VERB HAS A PREFIX, IT WILL RUN TWICE, ONCE WITH IT, ONCE WITHOUT
-                        my $prefix_count;
+                        my $prefix_count = 0;  # ???? Never changed.
                         my $prefix = "";
                         $prefix = $mywords[$i]{prefix};
                         if ($prefix ne $item->{prefix}) { $prefix = $prefix . "-" . $item->{prefix}; }
@@ -8467,14 +8465,14 @@ sub generate_vbforms {
                         #PREVOWEL IS DERIVED FROM THE ACTUAL WORD
                         $mywords[$i]{stem} =~ m/^($vowel_regex*?.*?)($vowel_regex$vowel_regex?)/;
 
-                        my $pre_vowel = $1;
+                        my $pre_vowel = defined($1) ? $1 : "";
 
                         #STRONG VERBS
                         if ($type eq "s") {
 
-# FOR STRONG VERBS, ROOT VOWEL IS DERIVED FROM THE PARADIGM. IF IT THE ROOT VOWEL IS DIFFERENT FROM ACTUAL, IT WILL OUTPUT BOTH VARIANTS
+                            # FOR STRONG VERBS, ROOT VOWEL IS DERIVED FROM THE PARADIGM. IF IT THE ROOT VOWEL IS DIFFERENT FROM ACTUAL, IT WILL OUTPUT BOTH VARIANTS
                             my @vowel = ($item->{vowel});
-                            if (!($vowel[0] eq $2) && ($paraID =~ m/^if$/i) && ($variantID == 0)) { $vowel[1] = $2; }
+                            if (defined($2) && !($vowel[0] eq $2) && ($paraID =~ m/^if$/i) && ($variantID == 0)) { $vowel[1] = $2; }
 
                             #remove empty vowel elements from the array
                             @vowel = map { $_ ? $_ : () } @vowel;
@@ -8971,8 +8969,8 @@ sub generate_vbforms {
 
                             #FOR WEAK VERBS, ROOT VOWEL IS  DERIVED FROM ACTUAL
                             $mywords[$i]{stem} =~ m/^($vowel_regex*?.*?)($vowel_regex$vowel_regex?)/;
-                            my @vowel = ($2);
-                            $pre_vowel = $1;
+                            my @vowel = (defined($2) ? $2 : "");
+                            $pre_vowel = defined($1) ? $1 : "";
                             my $dental = $item->{dental};
 
                             #output template for this paradigm member + PARADIGM-PART
@@ -9706,6 +9704,13 @@ sub print_form {
     $formi =~ s/\x{00FD}|\x{00ED}e/\x{00ED}/g;
     $formi = Unicode::Normalize::NFKD($formi);
     $formi =~ s/\p{NonspacingMark}//g;
+
+    foreach my $k ('BT', 'title', 'stem', 'form', 'formParts', 'var', 'probability', 'function', 'wright', 'paradigm', 'paraID', 'wordclass', 'class1', 'class2', 'class3', 'comment') {
+        if (!defined($form->{$k})) {
+            $form->{$k} = "";
+        }
+    }
+
     print
 "$formi\t$form->{BT}\t$form->{title}\t$form->{stem}\t$form->{form}\t$form->{formParts}\t$form->{var}\t$form->{probability}\t$form->{function}\t$form->{wright}\t$form->{paradigm}\t$form->{paraID}\t$form->{wordclass}\t$form->{class1}\t$form->{class2}\t$form->{class3}\t$form->{comment}\n";
 
