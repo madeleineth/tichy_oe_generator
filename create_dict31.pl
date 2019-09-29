@@ -8,6 +8,13 @@ use Data::Dump qw(dump);
 use Getopt::Long;
 binmode(STDOUT, ":utf8");
 
+our $vowel_regex = qr/[\x{00E6}aeiyou\x{0153}\x{00C6}AEIYOU\x{0152}\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]"/;
+our $lvowel_regex = qr/[\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]/;
+our $dipthong_regex = qr/([Ee][AaOo])|([Ii][Ee])/;
+our $ldipthong_regex = qr/([\x{00C9}\x{00E9}][AaOo])|([\x{00CD}\x{00ED}][Ee])/;
+our $consonant_regex = qr/[^\x{00E6}aeiyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]/;
+our $prefix_regex = undef;
+
 # LOAD DICTIONARY FILE INTO A MULTIDIMENSIONAL ASSOCIATIVE ARRAY
 sub load_dictionary {
     my ($dict_path) = @_;
@@ -115,23 +122,10 @@ sub load_paradigms {
 #- CONSTANTS AND GENERAL SUBROUTINES ---------------------------------------------------------------------------------------------------------------------------------
 #CONSTANTS
 sub set_constants {
-    my ($prefix_path) = @_;
-    use constant VOWEL =>
-"[\x{00E6}aeiyou\x{0153}\x{00C6}AEIYOU\x{0152}\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]";
-    $vowel_r =
-"[\x{00E6}aeiyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]";
-    $vowel_regex = qr/${\(VOWEL)}/;
-    use constant LVOWEL =>
-"[\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]";
-    $lvowel_regex = qr/${\(LVOWEL)}/;
-    use constant DIPHTHONG => "([Ee][AaOo])|([Ii][Ee])";
-    $diphthong_regex = qr/${\(DIPHTHONG)}/;
-    use constant LDIPHTHONG => "([\x{00C9}\x{00E9}][AaOo])|([\x{00CD}\x{00ED}][Ee])";
-    $ldiphthong_regex = qr/${\(LDIPHTHONG)}/;
-    use constant CONSONANT =>
-"[^\x{00E6}aeiyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]";
-    $consonant_regex = qr/${\(CONSONANT)}/;
+}
 
+sub make_prefix_regex {
+    my ($prefix_path) = @_;
     $prefix_regex    = "0";
     open(PFX, "<:utf8:crlf", $prefix_path) or die "Cannot open file: $prefix_path";
     foreach (<PFX>) { $prefix_regex = "$prefix_regex|$_"; }
@@ -224,8 +218,7 @@ sub move_accents {
 sub stem_length {
     my ($mystem) = @_;
     my $mylength = 0;
-    $mystem =~
-m/^.*?($vowel_regex$vowel_regex?)([^\x{00E6}aeiyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]*)(.*)/;
+    $mystem =~ m/^.*?($vowel_regex$vowel_regex?)([^\x{00E6}aeiyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]*)(.*)/;
     my $myvowel      = $1;
     my $myconsonants = "";
     my $mysecond     = "";
@@ -257,7 +250,7 @@ sub count_syllables {
 
 # COUNT SYLLABLES for a single item
 sub syllab {
-    my $myword  = @_[0];
+    my $myword  = $_[0];
     my $counter = 0;
     $counter =
       ($myword =~ s/($vowel_regex$consonant_regex)/$1/g);    #how many times vowel+consonant combination appears in stem
@@ -284,7 +277,7 @@ sub set_verb_paradigm {
 
     # FIRST THOSE THAT ARE PARADIGM EXAMPLES THEMSELVES (BY STEM COMPARISON AND RESTRICTED BY SAME CLASS MEMBERSHIP)
     for my $i (0 .. $#verbs_mywords) {
-        for (my $k1 = 0 ; $k1 < @vparadigms ; $k1++) {
+        for (my $k1 = 0 ; $k1 < @{$vparadigms} ; $k1++) {
             my $vparadigm = $vparadigms->[$k1]{title};
             my $vtype     = $vparadigms->[$k1]{type};
             if (
@@ -341,7 +334,7 @@ sub set_verb_paradigm {
     undef(@unassigned_verbs_mywords);
 
     # LET'S DO IT AGAIN, BUT WE ALSO TEST FOR A SECOND PREFIX IN STEM AND WE IGNORE I/Y
-    my $maxy = $#assigned_mywords;
+    $maxy = $#assigned_mywords;
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
             my $y          = 0;
@@ -392,11 +385,11 @@ sub set_verb_paradigm {
     # THEN ALL THOSE KNOWN FROM WRIGHT BY PARAGRAPHS
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {    #unless it's already assigned
-            for (my $k1 = 0 ; $k1 < @vparadigms ; $k1++) {
-                my $wrightparagraphs = $vparadigms[$k1]{wright};
+            for (my $k1 = 0 ; $k1 < @{$vparadigms} ; $k1++) {
+                my $wrightparagraphs = $vparadigms->[$k1]{wright};
                 if (($verbs_mywords[$i]{wright} =~ m/$wrightparagraphs/) && ($wrightparagraphs != 0)) {
                     while ($verbs_mywords[$i]{wright} =~ m/$wrightparagraphs/g) {
-                        push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$k1]);
+                        push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms->[$k1]);
                     }
                 }
             }
@@ -411,8 +404,8 @@ sub set_verb_paradigm {
     @verbs_mywords = @unassigned_verbs_mywords;
     undef(@unassigned_verbs_mywords);
 
-   # THEN AGAIN ALL THOSE UNASSIGNED THAT HAVE A STEM SIMILAR TO ASSIGNED VERBS (COMPARING ONLY THOSE OF THE SAME CLASS)
-    my $maxy = $#assigned_mywords;
+    # THEN AGAIN ALL THOSE UNASSIGNED THAT HAVE A STEM SIMILAR TO ASSIGNED VERBS (COMPARING ONLY THOSE OF THE SAME CLASS)
+    $maxy = $#assigned_mywords;
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
             my $y = 0;
@@ -444,7 +437,7 @@ sub set_verb_paradigm {
     undef(@unassigned_verbs_mywords);
 
     # LET'S DO IT ONCE AGAIN, BUT WE ALSO TEST FOR A SECOND PREFIX IN STEM AND WE IGNORE I/Y
-    my $maxy = $#assigned_mywords;
+    $maxy = $#assigned_mywords;
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
             my $y          = 0;
@@ -648,16 +641,14 @@ sub set_verb_paradigm {
     undef(@unassigned_verbs_mywords);
 
     # COMPARE STEMS WITH DIACRITICS DISREGARDED
-    my $maxy = $#assigned_mywords;
+    $maxy = $#assigned_mywords;
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
             my $y = 0;
-            $stem_dia = $verbs_mywords[$i]{stem};
+            my $stem_dia = $verbs_mywords[$i]{stem};
             $stem_dia = remove_dia($stem_dia);
             while ($y < $maxy) {
-                $stem_dia_assigned = $assigned_mywords[$y]{stem};
-                $stem_dia_assigned = remove_dia($stem_dia_assigned);
-
+                my $stem_dia_assigned = remove_dia($assigned_mywords[$y]{stem});
                 if ($stem_dia eq $stem_dia_assigned) {
                     unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
                         @{ $verbs_mywords[$i]{vb_paradigm} } = @{ $assigned_mywords[$y]{vb_paradigm} };
@@ -676,7 +667,7 @@ sub set_verb_paradigm {
     @verbs_mywords = @unassigned_verbs_mywords;
     undef(@unassigned_verbs_mywords);
 
-    my $maxy = $#assigned_mywords;
+    $maxy = $#assigned_mywords;
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
             my $y          = 0;
@@ -691,8 +682,7 @@ sub set_verb_paradigm {
             $mod_match4 =~ s/i/ie/g;
 
             while ($y < $maxy) {
-                $stem_dia_assigned = $assigned_mywords[$y]{stem};
-                $stem_dia_assigned = remove_dia($stem_dia_assigned);
+                my $stem_dia_assigned = remove_dia($assigned_mywords[$y]{stem});
                 if (   ($mod_match1 eq $stem_dia_assigned)
                     || ($mod_match2 eq $stem_dia_assigned)
                     || ($mod_match3 eq $stem_dia_assigned)
@@ -718,8 +708,9 @@ sub set_verb_paradigm {
     undef(@unassigned_verbs_mywords);
 
     # THE REST OF THE STRONG VERBS ARE ASSIGNED TO HELPAN, ALL OTHER TO DÉMAN - mostly variants of already assigned verbs.
-    for $i (0 .. $#verbs_mywords) {
+    for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
+            my $assigned_paradigm;
             if   ($verbs_mywords[$i]{vb_strong} == 1) { $assigned_paradigm = 13; }
             else                                      { $assigned_paradigm = 76; }
             push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms->[$assigned_paradigm]);
@@ -737,9 +728,9 @@ sub set_adj_paradigm {
     my $assignedcount;
     for my $i (0 .. $#mywords) {
         if ($mywords[$i]{stem} =~ m/feald$/) { $mywords[$i]{numeral} = 0; }
-        if (($mywords[$i]{adjective} == 1 && ($mywords[$i]{pspart} + $mywords[$i]{papart} + $mywords[$i]{numeral} == 0))
-          )
-        { #IS IT AN ADJECTIVE? Don't set paradigms for participles, that will be done while generating adj. forms (in case the verbs are assigned later) and don't set paradigms for numerals
+        # IS IT AN ADJECTIVE? Don't set paradigms for participles, that will be done while generating adj. forms (in
+        # case the verbs are assigned later) and don't set paradigms for numerals
+        if (($mywords[$i]{adjective} == 1 && ($mywords[$i]{pspart} + $mywords[$i]{papart} + $mywords[$i]{numeral} == 0))) {
             my $counter = 0;
             while ($mywords[$i]{adj_paradigm}[$counter]) { $counter++; }
 
@@ -971,7 +962,7 @@ sub set_noun_paradigm {
     print STDERR "$#assigned_nouns nouns assigned by Wright and simple stem comparison.\n";
 
     #BY ADVANCED STEM COMPARISON WITH THOSE KNOWN FROM WRIGHT
-    my $assignednum = $#assigned_nouns;
+    $assignednum = $#assigned_nouns;
     for my $i (0 .. $#mynouns) {
         my $mod_match1 = $mynouns[$i]{stem};
         $mod_match1 =~ s/^($prefix_regex)-?(.*)/$2/g;
@@ -1072,7 +1063,7 @@ sub set_noun_paradigm {
     print STDERR "$#assigned_nouns  nouns assigned by Wright,  stem comparison and heuristics.\n";
 
     #BY STEM COMPARISON WITH THOSE KNOWN FROM WRIGHT
-    my $assignednum = $#assigned_nouns;
+    $assignednum = $#assigned_nouns;
     for my $i (0 .. $#mynouns) {
         my $counter = 0;
         while ($mynouns[$i]{noun_paradigm}[$counter]) { $counter++; }
@@ -1091,7 +1082,7 @@ sub set_noun_paradigm {
     print STDERR "$#assigned_nouns nouns assigned by second stem comparison.\n";
 
     #BY ADVANCED STEM COMPARISON WITH THOSE KNOWN FROM WRIGHT
-    my $assignednum = $#assigned_nouns;
+    $assignednum = $#assigned_nouns;
     for my $i (0 .. $#mynouns) {
         my $mod_match1 = $mynouns[$i]{stem};
         $mod_match1 =~ s/^($prefix_regex)-?(.*)/$2/g;
@@ -3974,7 +3965,6 @@ sub generate_nounforms {
 
 }
 
-#GENERATE ADJECTIVAL FORMS
 sub generate_adjforms {
     my @mywords = @_;
     print STDERR "Generating adjectival forms from $#mywords adjectivals.\n";
@@ -3986,8 +3976,8 @@ sub generate_adjforms {
 
             #STRONG
             unless ($mywords[$i]{numeral} == 1) {
-
-  # template :LEMMA | STEM | BT-ID | WORDCLASS | GRADE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
+                # template :LEMMA | STEM | BT-ID | WORDCLASS | GRADE | CLASS |
+                # SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
                 %formhash = (
                     "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
                     "BT",     $bt_id,              "wordclass", "adjective",
@@ -5416,7 +5406,7 @@ sub generate_adjforms {
                 elsif (($mywords[$i]{adj_paradigm}[0] =~ m/h\x{00E1}lig/)
                     || (($mywords[$i]{papart} == 1) && (&stem_length($mywords[$i]{stem}))))
                 {
-                    $title_alt = $mywords[$i]{stem};
+                    my $title_alt = $mywords[$i]{stem};
                     if ($mywords[$i]{papart} == 1) {
                         $mywords[$i]{adj_paradigm}[0] = "h\x{00E1}lig";
                         %formhash = (
@@ -5845,7 +5835,7 @@ sub generate_adjforms {
 
                     #Sg
                     #Ma
-                    $title_alt = $mywords[$i]{stem};
+                    my $title_alt = $mywords[$i]{stem};
                     $title_alt =~ s/e$//;
                     $title_alt               = $mywords[$i]{prefix} . "-" . $title_alt;
                     $formhash{"function"}    = "PoSgMaNo";
@@ -6145,7 +6135,7 @@ sub generate_adjforms {
 
                     #Sg
                     #Ma
-                    $title_alt = $mywords[$i]{stem};
+                    my $title_alt = $mywords[$i]{stem};
                     $title_alt =~ s/.$//;
                     $title_alt               = $mywords[$i]{prefix} . "-" . $title_alt;
                     $formhash{"function"}    = "PoSgMaNo";
@@ -6529,7 +6519,7 @@ sub generate_adjforms {
                     }
                     if ($mywords[$i]{pronoun} == 1) { $formhash{"wordclass"} = "pronoun"; }
 
-                    $probability = $y;
+                    my $probability = $y;
 
                     #Sg
                     #Ma
@@ -6771,8 +6761,8 @@ sub generate_adjforms {
             {
                 #COMPARATIVE
 
-                @title_array = ();
-                $c           = "0";
+                my @title_array = ();
+                my $c = "0";
 
                 #irregular comparatives
                 if ($mywords[$i]{stem} eq "g\x{00F3}d") {
@@ -6790,7 +6780,7 @@ sub generate_adjforms {
                     $mywords[$i]{stem} =~ m/($vowel_regex[eao]?)/;
                     my @vowels = &iumlaut($1);
                     for my $y (0 .. $#vowels) {
-                        $title_alt = $mywords[$i]{stem};
+                        my $title_alt = $mywords[$i]{stem};
                         $title_alt =~ s/$vowel_regex[eao]?/$vowels[$y]/;
                         push(@title_array, $mywords[$i]{prefix} . "-" . $title_alt);
                         if ($title_alt =~ s/u$/w/) { push(@title_array, $mywords[$i]{prefix} . "-" . $title_alt); }
@@ -6836,7 +6826,7 @@ sub generate_adjforms {
                         );
                     }
 
-                    $probability = abs($y - 2);
+                    my $probability = abs($y - 2);
 
                     #Sg
                     #Ma
@@ -7074,7 +7064,7 @@ sub generate_adjforms {
 
                 #SUPERLATIVE WEAK
                 @title_array = ();
-                $s           = "0";
+                my $s = "0";
 
                 #irregular superlatives
                 if ($mywords[$i]{stem} eq "g\x{00F3}d") {
@@ -7094,7 +7084,7 @@ sub generate_adjforms {
                     $mywords[$i]{stem} =~ m/($vowel_regex[eao]?)/;
                     my @vowels = &iumlaut($1);
                     for my $y (0 .. $#vowels) {
-                        $title_alt = $mywords[$i]{stem};
+                        my $title_alt = $mywords[$i]{stem};
                         $title_alt =~ s/$vowel_regex[eao]?/$vowels[$y]/;
                         push(@title_array, $mywords[$i]{prefix} . "-" . $title_alt);
                         if ($title_alt =~ s/u$/w/) { push(@title_array, $mywords[$i]{prefix} . "-" . $title_alt); }
@@ -7107,8 +7097,6 @@ sub generate_adjforms {
                             $title_alt =~ s/($vowel_regex.*)$vowel_regex(.*?)$/$1$2/;
                             push(@title_array, $mywords[$i]{prefix} . "-" . $title_alt);
                         }
-
-           #if ($title_alt =~ s/($vowel_regex[eao]?)[h]$/$1/) {push(@title_array, $mywords[$i]{prefix}."-".$title_alt);}
                     }
                 }
 
@@ -7142,7 +7130,7 @@ sub generate_adjforms {
                         );
                     }
 
-                    $probability = abs($y - 2);
+                    my $probability = abs($y - 2);
 
                     #Sg
                     #Ma
@@ -7377,8 +7365,9 @@ sub generate_adjforms {
                     $formhash{"formParts"} = $form_parts;
                     print_form({%formhash});
 
-   #SUPERLATIVE STRONG
-   # template :LEMMA | STEM | BT-ID | WORDCLASS | TYPE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
+                    #SUPERLATIVE STRONG
+                    # template :LEMMA | STEM | BT-ID | WORDCLASS | TYPE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID |
+                    # WRIGHT | VARIANT-ID
                     %formhash = (
                         "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
                         "BT",     $bt_id,              "wordclass", "adjective",
@@ -7405,8 +7394,8 @@ sub generate_adjforms {
                     #Sg
                     #Ma
                     $formhash{"function"} = "SpSgMaNo";
-                    my $form_parts = "" . $title_array[$y] . "-$s-0";
-                    my $form       = $form_parts;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form       = $form_parts;
                     $form       =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
                     $formhash{"form"}      = $form;
@@ -7755,7 +7744,6 @@ sub generate_adjforms {
             }
         }
     }
-
 }
 
 #GENERATE ADVERBIAL FORMS
@@ -7768,7 +7756,7 @@ sub generate_advforms {
             my $bt_id = sprintf("%06d", $mywords[$i]{nid});
 
             # template
-            %formhash = (
+            my %formhash = (
                 "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
                 "BT",     $bt_id,              "wordclass", "adverb",
                 "wright", $mywords[$i]{wright}
@@ -7777,13 +7765,15 @@ sub generate_advforms {
             #positive
             $formhash{"function"}    = "Po";
             $formhash{"probability"} = "0";
-            $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+            my $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
             my $form = $form_parts;
             $form       =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
             $formhash{"form"}      = $form;
             $formhash{"formParts"} = $form_parts;
             print_form({%formhash});
+
+            my @title_array = ();
 
             #comparative
             #suppletive stems
@@ -7887,6 +7877,7 @@ sub generate_numforms {
     print STDERR "Generating numeral forms.\n";
     my %formhash;
     for my $i (0 .. $#mywords) {
+        my @stem;
         if ($mywords[$i]{numeral} == 1) {    #IS IT A NUMERAL?
             my $bt_id = sprintf("%06d", $mywords[$i]{nid});
 
@@ -7908,8 +7899,8 @@ sub generate_numforms {
                 $stem[0] = $mywords[$i]{stem};
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -7920,8 +7911,8 @@ sub generate_numforms {
                 $stem[0] =~ s/[ea]$//;
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -7930,8 +7921,8 @@ sub generate_numforms {
                 }
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -7942,8 +7933,8 @@ sub generate_numforms {
                 $stem[0] = $mywords[$i]{stem};
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -7954,8 +7945,8 @@ sub generate_numforms {
                 $stem[0] =~ s/[ea]$//;
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -7964,8 +7955,8 @@ sub generate_numforms {
                 }
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -7979,8 +7970,8 @@ sub generate_numforms {
                 $formhash{"function"} = "PlMaGe";
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -7995,8 +7986,8 @@ sub generate_numforms {
                 $formhash{"function"} = "PlMaDa";
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8013,8 +8004,8 @@ sub generate_numforms {
                 $stem[0] = $mywords[$i]{stem};
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8025,8 +8016,8 @@ sub generate_numforms {
                 $stem[0] =~ s/[ea]$//;
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8035,8 +8026,8 @@ sub generate_numforms {
                 }
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8047,8 +8038,8 @@ sub generate_numforms {
                 $stem[0] = $mywords[$i]{stem};
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8060,8 +8051,8 @@ sub generate_numforms {
                 $formhash{"function"} = "PlFeAc";
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8070,8 +8061,8 @@ sub generate_numforms {
                 }
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8085,8 +8076,8 @@ sub generate_numforms {
                 $formhash{"function"} = "PlFeGe";
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8101,8 +8092,8 @@ sub generate_numforms {
                 $formhash{"function"} = "PlFeDa";
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8119,8 +8110,8 @@ sub generate_numforms {
                 $stem[0] = $mywords[$i]{stem};
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8131,8 +8122,8 @@ sub generate_numforms {
                 $stem[0] =~ s/[ea]$//;
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8141,8 +8132,8 @@ sub generate_numforms {
                 }
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8151,8 +8142,8 @@ sub generate_numforms {
                 }
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8163,8 +8154,8 @@ sub generate_numforms {
                 $stem[0] = $mywords[$i]{stem};
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8176,8 +8167,8 @@ sub generate_numforms {
                 $formhash{"function"} = "PlNeAc";
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8186,8 +8177,8 @@ sub generate_numforms {
                 }
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8196,8 +8187,8 @@ sub generate_numforms {
                 }
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8211,8 +8202,8 @@ sub generate_numforms {
                 $formhash{"function"} = "PlNeGe";
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8227,8 +8218,8 @@ sub generate_numforms {
                 $formhash{"function"} = "PlNeDa";
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
-                        $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        my $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
+                        my $form       = $form_parts;
                         $form =~ s/[0\-\n]//g;
                         $formhash{"form"}      = $form;
                         $formhash{"formParts"} = $form_parts;
@@ -8249,11 +8240,13 @@ sub generate_numforms {
             my $alt_title = $mywords[$i]{prefix} . "-" . $mywords[$i]{stem};
             $alt_title =~ s/[eao]$//;
 
+            my $probability = 0;
+
             #Pl
             #Ma
             $formhash{"function"} = "PoPlMaNo";
-            $form_parts           = "" . $alt_title . "-an";
-            $form                 = $form_parts;
+            my $form_parts           = "" . $alt_title . "-an";
+            my $form                 = $form_parts;
             $form       =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
             $formhash{"form"}      = $form;
@@ -8378,7 +8371,6 @@ sub generate_numforms {
             $formhash{"form"}      = $form;
             $formhash{"formParts"} = $form_parts;
             print_form({%formhash});
-
         }
     }
 }
@@ -8402,7 +8394,7 @@ sub generate_vbforms {
             my $wright   = $_->{wright};
             my $bt_id    = sprintf("%06d", $mywords[$i]{nid});
 
-# output template for all verbs:LEMMA | STEM | BT-ID | WORDCLASS | VERB-TYPE | VERB-CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT |
+            # output template for all verbs:LEMMA | STEM | BT-ID | WORDCLASS | VERB-TYPE | VERB-CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT |
             my $form_template_header =
               "$mywords[$i]{title}\t$mywords[$i]{stem}\t$bt_id\tverb\t$type\t$class\t$subclass\t$title\t$ID\t$wright\t";
             %formhash = (
@@ -8469,15 +8461,12 @@ sub generate_vbforms {
 
                         #STRONG VERBS
                         if ($type eq "s") {
-
-#FOR STRONG VERBS, ROOT VOWEL IS DERIVED FROM THE PARADIGM. IF IT THE ROOT VOWEL IS DIFFERENT FROM ACTUAL, IT WILL OUTPUT BOTH VARIANTS
-                            my @vowel;
-                            $vowel[0] = $item->{vowel};
+                            # FOR STRONG VERBS, ROOT VOWEL IS DERIVED FROM THE PARADIGM. IF IT THE ROOT VOWEL IS DIFFERENT FROM ACTUAL, IT WILL OUTPUT BOTH VARIANTS
+                            my @vowel = ($item->{vowel});
                             if (!($vowel[0] eq $2) && ($paraID =~ m/^if$/i) && ($variantID == 0)) { $vowel[1] = $2; }
 
                             #remove empty vowel elements from the array
-                            @full_vowel = map { $_ ? $_ : () } @vowel;
-                            @vowel      = @full_vowel;
+                            @vowel = map { $_ ? $_ : () } @vowel;
 
                             for my $vcount (0 .. $#vowel) {
 
@@ -8485,7 +8474,8 @@ sub generate_vbforms {
                                 my $form_header = $form_template_header . "$paraID";
                                 $formhash{"function"} = $paraID;
 
-# first output all parts of the paradigm that are defined in the paradigm dictionary (mostly the principal parts)  TEMPLATE + PROBABILITY | FORMPARTS | FORM
+                                # first output all parts of the paradigm that are defined in the paradigm dictionary
+                                # (mostly the principal parts)  TEMPLATE + PROBABILITY | FORMPARTS | FORM
                                 my $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$ending";
                                 my $form       = $form_parts;
                                 $form       =~ s/[0\-\n]//g;
@@ -8494,20 +8484,6 @@ sub generate_vbforms {
                                 $formhash{"formParts"}   = $form_parts;
                                 $formhash{"probability"} = $probability;
                                 print_form({%formhash});
-
-                                #add generated past participles to the wordlist
-                                if (($paraID =~ m/^PaPt$/i) && ($prefix == $mywords[$i]{prefix})) {
-                                    my $adjsize = $#adjectives + 1;
-                                    $adjectives[$adjsize]{prefix} = $prefix;
-                                    $adjectives[$adjsize]{stem}   = $form_parts;
-                                    $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
-                                    $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
-                                    $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
-                                    $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
-                                    $adjectives[$adjsize]{papart} = 1;
-                                }
 
                                 # from Inf we generate: ii, PsPa, PsInSg1, PsInPl, PsSuSg, PsSuPl, ImpSg, ImpPl
                                 if ($paraID =~ m/^if$/i) {
@@ -8562,20 +8538,6 @@ sub generate_vbforms {
                                         $formhash{"formParts"}   = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         print_form({%formhash});
-                                    }
-
-                                    #add generated present participles to the wordlist
-                                    if ($prefix == $mywords[$i]{prefix}) {
-                                        my $adjsize = $#adjectives + 1;
-                                        $adjectives[$adjsize]{prefix} = $prefix;
-                                        $adjectives[$adjsize]{stem}   = $form_parts;
-                                        $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
-                                        $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
-                                        $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
-                                        $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                        $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
-                                        $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
-                                        $adjectives[$adjsize]{pspart} = 1;
                                     }
 
                                     #PsInSg1 -e, -u, -o, -æ; -0
@@ -8750,7 +8712,7 @@ sub generate_vbforms {
                                     my @mvowels = &iumlaut($vowel[$vcount]);
                                     for (my $mvowel_count = 0 ; $mvowel_count < @mvowels ; $mvowel_count++) {
                                         $probability = $prefix_count + $mvowel_count;
-                                        $mvowel      = $mvowels[$mvowel_count];
+                                        my $mvowel = $mvowels[$mvowel_count];
 
                                         #PsInSg2 -st, -stu, -est, -ist, -s
                                         $formhash{"function"} = "PsInSg2";
@@ -8998,8 +8960,7 @@ sub generate_vbforms {
 
                             #FOR WEAK VERBS, ROOT VOWEL IS  DERIVED FROM ACTUAL
                             $mywords[$i]{stem} =~ m/^($vowel_regex*?.*?)($vowel_regex$vowel_regex?)/;
-                            my @vowel;
-                            $vowel[0] = $2;
+                            my @vowel = ($2);
                             $pre_vowel = $1;
                             my $dental = $item->{dental};
 
@@ -9026,85 +8987,26 @@ sub generate_vbforms {
                                 $formhash{"formParts"}   = $form_parts;
                                 $formhash{"probability"} = $probability;
                                 print_form({%formhash});
-
-                                #add generated present participles to the wordlist
-                                if (($paraID =~ m/^PsPt$/i) && ($prefix == $mywords[$i]{prefix})) {
-                                    my $adjsize = $#adjectives + 1;
-                                    $adjectives[$adjsize]{prefix} = $prefix;
-                                    $adjectives[$adjsize]{stem}   = $form_parts;
-                                    $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
-                                    $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
-                                    $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
-                                    $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
-                                    $adjectives[$adjsize]{pspart} = 1;
-                                }
-
-                                #add generated past participles to the wordlist
-                                if (($paraID =~ m/^PaPt$/i) && ($prefix == $mywords[$i]{prefix})) {
-                                    my $adjsize = $#adjectives + 1;
-                                    $adjectives[$adjsize]{prefix} = $prefix;
-                                    $adjectives[$adjsize]{stem}   = $form_parts;
-                                    $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
-                                    $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
-                                    $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
-                                    $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
-                                    $adjectives[$adjsize]{papart} = 1;
-                                }
                             }
                             else {
-
-# first output all parts of the paradigm that are defined in the paradigm dictionary (mostly the principal parts)  TEMPLATE + PROBABILITY | FORMPARTS | FORM
-                                $form_parts =
-                                  "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental-$ending";
-                                $form = $form_parts;
-                                $form       =~ s/[0\-\n]//g;
+                                # first output all parts of the paradigm that are defined in the paradigm dictionary
+                                # (mostly the principal parts)  TEMPLATE + PROBABILITY | FORMPARTS | FORM
+                                my $form_parts =
+                                  "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$dental-$ending";
+                                my $form = $form_parts;
+                                $form =~ s/[0\-\n]//g;
                                 $form_parts =~ s/[\n]//g;
                                 $formhash{"form"}        = $form;
                                 $formhash{"formParts"}   = $form_parts;
                                 $formhash{"probability"} = $probability;
                                 print_form({%formhash});
 
-                                #add generated present participles to the wordlist
-                                if (($paraID =~ m/^PsPt$/i) && ($prefix == $mywords[$i]{prefix})) {
-                                    my $adjsize = $#adjectives + 1;
-                                    $adjectives[$adjsize]{prefix} = $prefix;
-                                    $adjectives[$adjsize]{stem}   = $form_parts;
-                                    $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
-                                    $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
-                                    $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
-                                    $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
-                                    $adjectives[$adjsize]{pspart} = 1;
-                                }
-
-                                #add generated past participles to the wordlist
-                                if (($paraID =~ m/^PaPt$/i) && ($prefix == $mywords[$i]{prefix})) {
-                                    my $adjsize = $#adjectives + 1;
-                                    $adjectives[$adjsize]{prefix} = $prefix;
-                                    $adjectives[$adjsize]{stem}   = $form_parts;
-                                    $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
-                                    $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
-                                    $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
-                                    $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
-                                    $adjectives[$adjsize]{papart} = 1;
-                                }
-
                                 # parts derived from inf
                                 if ($paraID =~ m/^if$/i) {
-                                    $iending = "";
+                                    my $iending = "";
                                     if ($ending =~ m/^i/i) { $iending = "i"; }
 
                                     #Inf -an/-ian
-                                    $inf_ending   = $ending;
-                                    $inf_boundary = $item->{boundary};
-
                                     $formhash{"function"} = "if";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$ending";
                                     $form       = $form_parts;
@@ -9339,20 +9241,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"probability"} = $probability;
                                         print_form({%formhash});
                                     }
-
-                                    #add generated present participles to the wordlist
-                                    if ($prefix == $mywords[$i]{prefix}) {
-                                        my $adjsize = $#adjectives + 1;
-                                        $adjectives[$adjsize]{prefix} = $prefix;
-                                        $adjectives[$adjsize]{stem}   = $form_parts;
-                                        $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
-                                        $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
-                                        $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
-                                        $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                        $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
-                                        $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
-                                        $adjectives[$adjsize]{pspart} = 1;
-                                    }
                                 }
 
                                 # parts derived from PsInSg2
@@ -9361,7 +9249,7 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                     #all verbs simplify double post-vowel in these paradigm parts
                                     $post_vowel =~ s/(.)\1/$1/;
 
-                   #PsInSg2 -st -est, -es, -ist, -s (sealfian and those manually defined have -ast/-as in the para dict)
+                                    #PsInSg2 -st -est, -es, -ist, -s (sealfian and those manually defined have -ast/-as in the para dict)
                                     $formhash{"function"} = "PsInSg2";
                                     $post_vowel = $post_vowel;
 
@@ -9682,9 +9570,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"probability"} = $probability;
                                         print_form({%formhash});
 
-#$form_parts = "ge-$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental";
-#$form = $form_parts; $form =~ s/[0\-]//g; $formhash{"form"}=$form; $formhash{"formParts"}=$form_parts; $formhash{"probability"}=$probability+1; push (@forms, {%formhash});
-#t-ed > t-t
                                         if ($form =~ s/ted$/tt/g) {
                                             $formhash{"form"}        = $form;
                                             $formhash{"formParts"}   = $form_parts;
@@ -9701,21 +9586,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                             print_form({%formhash});
                                             $count++;
                                         }
-
-                                        #add generated past participles to the wordlist
-                                        if ($prefix == $mywords[$i]{prefix}) {
-                                            my $adjsize = $#adjectives + 1;
-                                            $adjectives[$adjsize]{prefix} = $prefix;
-                                            $adjectives[$adjsize]{stem}   = $form_parts;
-                                            $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
-                                            $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
-                                            $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
-                                            $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                            $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
-                                            $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
-                                            $adjectives[$adjsize]{papart} = 1;
-                                        }
-
                                     }
                                 }
                             }
@@ -9740,34 +9610,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                             $formhash{"formParts"}   = $form_parts;
                             $formhash{"probability"} = $probability;
                             print_form({%formhash});
-
-                            #add generated present participles to the wordlist
-                            if (($paraID =~ m/^PsPt$/i) && ($prefix == $mywords[$i]{prefix})) {
-                                my $adjsize = $#adjectives + 1;
-                                $adjectives[$adjsize]{prefix} = $prefix;
-                                $adjectives[$adjsize]{stem}   = $form_parts;
-                                $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
-                                $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
-                                $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
-                                $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
-                                $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
-                                $adjectives[$adjsize]{pspart} = 1;
-                            }
-
-                            #add generated past participles to the wordlist
-                            if (($paraID =~ m/^PaPt$/i) && ($prefix == $mywords[$i]{prefix})) {
-                                my $adjsize = $#adjectives + 1;
-                                $adjectives[$adjsize]{prefix} = $prefix;
-                                $adjectives[$adjsize]{stem}   = $form_parts;
-                                $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
-                                $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
-                                $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
-                                $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
-                                $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
-                                $adjectives[$adjsize]{papart} = 1;
-                            }
 
                             # automatically ad suffixes to 5 forms for pp
                             if ($type eq "pp") {
@@ -9855,7 +9697,6 @@ sub print_form {
     $formi = Unicode::Normalize::NFKD($formi);
     $formi =~ s/\p{NonspacingMark}//g;
     print "$formi\t$form->{BT}\t$form->{title}\t$form->{stem}\t$form->{form}\t$form->{formParts}\t$form->{var}\t$form->{probability}\t$form->{function}\t$form->{wright}\t$form->{paradigm}\t$form->{paraID}\t$form->{wordclass}\t$form->{class1}\t$form->{class2}\t$form->{class3}\t$form->{comment}\n";
-    $counter++;
 
     #remove double consonants from formi with lower probability
     if ($formi =~ s/($consonant_regex)\1/$1/g) {
@@ -9866,37 +9707,34 @@ sub print_form {
 
 #- RUN THE SUBROUTINES ------------------------------------------------------------------------------------------
 
-@forms;
-
 my %files = (
     'dictionary'       => "dict_adj-vb-part-num-adv-noun.txt",
     'manual-forms'     => "manual_forms.txt",
     'verbal-paradigms' => "para_vb.txt",
     'prefixes'         => "prefixes.txt",
-    'output'           => "output.txt"
 );
-GetOptions(\%files, 'dictionary=s', 'manual-forms=s', 'verbal-paradigms=s', 'prefixes=s', 'output=s');
+GetOptions(\%files, 'dictionary=s', 'manual-forms=s', 'verbal-paradigms=s', 'prefixes=s');
 
 my $start = time();
 print STDERR "Printing manual forms...\n";
-print_manual_forms($args->{"manual-forms"});
+print_manual_forms($files{"manual-forms"});
 print STDERR "Loading the dictionary...\n";
-my @words = load_dictionary($args->{dictionary});
+my @words = load_dictionary($files{dictionary});
 print STDERR "Loading the paradigms...\n";
-my $vparadigms = load_paradigms($args->{"verbal-paradigms"});
+my $vparadigms = load_paradigms($files{"verbal-paradigms"});
 
-set_constants();
+$prefix_regex = make_prefix_regex($files{prefixes});
 
 @words = &remove_prefix(@words);
 @words = &remove_hyphens(@words);
 @words = &count_syllables(@words);
 
 print STDERR "Setting verbal paradigms...\n";
-@verbs = &set_verb_paradigm(\@words, $vparadigms);
+my @verbs = &set_verb_paradigm(\@words, $vparadigms);
 print STDERR "Setting adjectival paradigms...\n";
-@adjectives = &set_adj_paradigm(@words);
+my @adjectives = &set_adj_paradigm(@words);
 print STDERR "\nSetting nominal paradigms...\n";
-@nouns = &set_noun_paradigm(@words);
+my @nouns = &set_noun_paradigm(@words);
 
 generate_vbforms(@verbs);
 generate_adjforms(@adjectives);
@@ -9904,4 +9742,5 @@ generate_advforms(@words);
 generate_numforms(@words);
 generate_nounforms(@nouns);
 
+my $elapsed = time() - $start;
 print STDERR "Finished in ${elapsed}s.\n";
