@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+
 use strict;
 use warnings FATAL => 'all';
 use experimental 'switch';
@@ -8380,7 +8382,6 @@ sub generate_vbforms {
     my @mywords = @_;
     print STDERR "Generating verbal forms from $#mywords verbals.\n";
     my %formhash;
-    my $count = 0;
 
     #CYCLE WORDS & PARADIGMS
     for my $i (0 .. $#mywords) {
@@ -8423,6 +8424,9 @@ sub generate_vbforms {
                         my $variant_pfx = defined($item->{prefix}) ? $item->{prefix} : "";
                         if ($prefix ne $variant_pfx) { $prefix = $prefix . "-" . $variant_pfx; }
                         my $paraID = $item->{paraID};
+                        if (!defined($paraID)) {
+                            print STDERR "Weird item: " . %{$item}."\n";
+                        }
                         my $ending = $item->{ending};
                         my $boundary = $item->{boundary};
                         my $post_vowel;
@@ -8752,7 +8756,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #þst > tst
@@ -8761,7 +8764,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #tst > st
@@ -8770,7 +8772,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #ngst > ncst
@@ -8779,7 +8780,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #ncst > nst
@@ -8788,7 +8788,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #gst > hst
@@ -8797,7 +8796,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #hst > xst
@@ -8806,7 +8804,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #PsInSg3 -eþ, -iþ, -þ
@@ -8839,7 +8836,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #tt,dt > t
@@ -8848,7 +8844,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #þþ > þ
@@ -8857,7 +8852,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #þ > t
@@ -8866,7 +8860,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #sþ > st
@@ -8875,7 +8868,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #ngþ > ncþ
@@ -8884,7 +8876,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #gþ > hþ
@@ -8893,7 +8884,6 @@ sub generate_vbforms {
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
                                     }
                                 }
@@ -9286,7 +9276,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #þst > tst
@@ -9295,7 +9284,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #tst > st
@@ -9304,7 +9292,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #ngst > ncst
@@ -9313,7 +9300,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #ncst > nst
@@ -9322,7 +9308,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #gst > hst
@@ -9331,7 +9316,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #hst > xst
@@ -9340,7 +9324,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                         #PsInSg3 -eþ, -ieþ, -iþ, -þ (sealfian and those manually defined have -aþ in the para dict)
@@ -9380,7 +9363,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #tt > t
@@ -9389,7 +9371,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #þþ > þ
@@ -9398,7 +9379,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #þ > t
@@ -9407,7 +9387,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #sþ > st
@@ -9416,7 +9395,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #ngþ > ncþ
@@ -9425,7 +9403,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #gþ > hþ
@@ -9434,7 +9411,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         print_form({%formhash});
-                                        $count++;
                                     }
 
                                     #ImpSg -e;-0 (sealfian and those manually defined have -a in the para dict)
@@ -9565,7 +9541,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
 
                                         #t-t > t
@@ -9574,7 +9549,6 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                             $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             print_form({%formhash});
-                                            $count++;
                                         }
                                     }
                                 }
@@ -9600,7 +9574,7 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                             $formhash{"probability"} = $probability;
                             print_form({%formhash});
 
-                            # automatically ad suffixes to 5 forms for pp
+                            # automatically add suffixes to 5 forms for pp
                             if ($type eq "pp") {
                                 if ($paraID =~ m/^if$/i) {
 
