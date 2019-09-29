@@ -8,11 +8,11 @@ binmode(STDOUT, ":utf8");
 
 #- OPENING & READING FILES -----------------------------------------------------------------------------------------------
 sub open_files {
-    my $mydictionary_file       = "input/dict_adj-vb-part-num-adv-noun.txt";
-    my $mymanualforms_file      = "input/manual_forms.txt";
+    my $mydictionary_file = "input/dict_adj-vb-part-num-adv-noun.txt";
+    my $mymanualforms_file = "input/manual_forms.txt";
     my $myverbal_paradigms_file = "input/para_vb.txt";
-    my $myprefixes_file         = "input/prefixes.txt";
-    my $myoutput_file           = "output/output.txt";
+    my $myprefixes_file = "input/prefixes.txt";
+    my $myoutput_file = "output/output.txt";
 
     # OPENS DICTIONARY FILE
     open(INPUT, "<:utf8", $mydictionary_file) or die "Cannot open file: $mydictionary_file";
@@ -50,29 +50,29 @@ sub load_dictionary {
         $line = move_accents(eth2thorn(lc($line)))
           ; #SOME NORMALIZATION: all will be now in lowercase, eth will be thorns and first vowel in dipht. will be accented
         my @splitarray = split(/\t/, $line);
-        my $mypp       = 0;
-        my $mypspa     = 0;
+        my $mypp = 0;
+        my $mypspa = 0;
         if ($splitarray[7] eq "1") {
-            if   ($splitarray[1] =~ m/nde$/) { $mypspa = 1; }
-            else                             { $mypp   = 1; }
+            if ($splitarray[1] =~ m/nde$/) { $mypspa = 1; }
+            else { $mypp = 1; }
         }    #If the form is a participle, decide, whether it is pspa or ppa
         my %assoc_array = (
-            "nid",          $splitarray[0],  "title",         $splitarray[1],
-            "wright",       $splitarray[2],  "noun",          $splitarray[3],
-            "pronoun",      $splitarray[4],  "adjective",     $splitarray[5],
-            "verb",         $splitarray[6],  "participle",    $splitarray[7],
-            "pspart",       $mypspa,         "papart",        $mypp,
-            "adverb",       $splitarray[8],  "preposition",   $splitarray[9],
-            "conjunction",  $splitarray[10], "interjection",  $splitarray[11],
-            "numeral",      $splitarray[12], "vb_weak",       $splitarray[13],
-            "vb_strong",    $splitarray[14], "vb_contracted", $splitarray[15],
-            "vb_pretpres",  $splitarray[16], "vb_anomalous",  $splitarray[17],
-            "vb_uncertain", $splitarray[18], "n_masc",        $splitarray[19],
-            "n_fem",        $splitarray[20], "n_neut",        $splitarray[21],
+            "nid", $splitarray[0], "title", $splitarray[1],
+            "wright", $splitarray[2], "noun", $splitarray[3],
+            "pronoun", $splitarray[4], "adjective", $splitarray[5],
+            "verb", $splitarray[6], "participle", $splitarray[7],
+            "pspart", $mypspa, "papart", $mypp,
+            "adverb", $splitarray[8], "preposition", $splitarray[9],
+            "conjunction", $splitarray[10], "interjection", $splitarray[11],
+            "numeral", $splitarray[12], "vb_weak", $splitarray[13],
+            "vb_strong", $splitarray[14], "vb_contracted", $splitarray[15],
+            "vb_pretpres", $splitarray[16], "vb_anomalous", $splitarray[17],
+            "vb_uncertain", $splitarray[18], "n_masc", $splitarray[19],
+            "n_fem", $splitarray[20], "n_neut", $splitarray[21],
             "n_uncert", $splitarray[22], "vb_paradigm", [@vb_paradigms],
             "adj_paradigm", [@adj_paradigms], "noun_paradigm", [@noun_paradigms],
             "syllables", "", "prefix", "",
-            "long_stem", "", "stem",   $splitarray[1]
+            "long_stem", "", "stem", $splitarray[1]
         );
         @words[$count] = {%assoc_array};
         $count++;
@@ -86,24 +86,24 @@ sub load_forms {
         $forms_line =~ s/\n//;
         $forms_line = move_accents(eth2thorn($forms_line));
         my @splitarray = split(/\t/, $forms_line);
-        $forms[$i]{BT}    = $splitarray[0];
+        $forms[$i]{BT} = $splitarray[0];
         $forms[$i]{title} = lc($splitarray[1]);
-        $forms[$i]{stem}  = lc($splitarray[1]);
+        $forms[$i]{stem} = lc($splitarray[1]);
         $forms[$i]{stem} =~ s/.*-//;
         $forms[$i]{form} = lc($splitarray[3]);
         $forms[$i]{form} =~ s/-//;
-        $forms[$i]{formParts}   = lc($splitarray[3]);
-        $forms[$i]{var}         = $splitarray[5];
+        $forms[$i]{formParts} = lc($splitarray[3]);
+        $forms[$i]{var} = $splitarray[5];
         $forms[$i]{probability} = $splitarray[6];
-        $forms[$i]{function}    = $splitarray[7];
-        $forms[$i]{wright}      = $splitarray[8];
-        $forms[$i]{paradigm}    = lc($splitarray[9]);
-        $forms[$i]{paraID}      = $splitarray[10];
-        $forms[$i]{wordclass}   = lc($splitarray[11]);
-        $forms[$i]{class1}      = lc($splitarray[12]);
-        $forms[$i]{class2}      = lc($splitarray[13]);
-        $forms[$i]{class3}      = lc($splitarray[14]);
-        $forms[$i]{comment}     = $splitarray[15];
+        $forms[$i]{function} = $splitarray[7];
+        $forms[$i]{wright} = $splitarray[8];
+        $forms[$i]{paradigm} = lc($splitarray[9]);
+        $forms[$i]{paraID} = $splitarray[10];
+        $forms[$i]{wordclass} = lc($splitarray[11]);
+        $forms[$i]{class1} = lc($splitarray[12]);
+        $forms[$i]{class2} = lc($splitarray[13]);
+        $forms[$i]{class3} = lc($splitarray[14]);
+        $forms[$i]{comment} = $splitarray[15];
         $i++;
     }
 }
@@ -113,26 +113,26 @@ sub load_paradigms {
     foreach $vparadigm_line (@vparadigm_lines) {
         $vparadigm_line = eth2thorn(lc($vparadigm_line));
         my @splitarray = split(/\t/, $vparadigm_line);
-        my $ID         = $splitarray[0];
-        my $variant    = $splitarray[7];
-        my $paradigm   = $splitarray[8];
+        my $ID = $splitarray[0];
+        my $variant = $splitarray[7];
+        my $paradigm = $splitarray[8];
         $splitarray[15] =~ s/\n//;
 
         unless ($vparadigms[$ID]) {
             %{ $vparadigms[$ID] } = (
-                "ID",          $splitarray[0], "title",    eth2thorn($splitarray[1]),
-                "type",        $splitarray[2], "class",    $splitarray[3],
+                "ID", $splitarray[0], "title", eth2thorn($splitarray[1]),
+                "type", $splitarray[2], "class", $splitarray[3],
                 "subdivision", $splitarray[4], "subclass", $splitarray[5],
-                "wright",      $splitarray[6]
+                "wright", $splitarray[6]
             );
         }
         unless ($vparadigms[$ID]{variant}[$variant]) {
             %{ $vparadigms[$ID]{variant}[$variant] } = ("variantID", $variant);
         }
         %{ $vparadigms[$ID]{variant}[$variant]{$paradigm} } = (
-            "paraID", $paradigm,       "prefix",    $splitarray[9],  "preVowel", $splitarray[10],
-            "vowel",  $splitarray[11], "postVowel", $splitarray[12], "boundary", $splitarray[13],
-            "dental", $splitarray[14], "ending",    $splitarray[15]
+            "paraID", $paradigm, "prefix", $splitarray[9], "preVowel", $splitarray[10],
+            "vowel", $splitarray[11], "postVowel", $splitarray[12], "boundary", $splitarray[13],
+            "dental", $splitarray[14], "ending", $splitarray[15]
         );
     }
 }
@@ -155,7 +155,7 @@ sub set_constants {
     use constant CONSONANT =>
 "[^\x{00E6}aeiyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]";
     $consonant_regex = qr/${\(CONSONANT)}/;
-    $prefix_regex    = "0";
+    $prefix_regex = "0";
     foreach (@prefix_input) { $prefix_regex = "$prefix_regex|$_"; }
     $prefix_regex =~ s/\n//g;
     $prefix_regex =~ s/0\|//g;
@@ -176,7 +176,7 @@ sub remove_hyphens {
     my @mywords = @_;
     for my $i (0 .. $#mywords) {
         $mywords[$i]{prefix} =~ s/-//g;    # IN CASE OF MORE HYPHENS
-        $mywords[$i]{stem}   =~ s/-//g;
+        $mywords[$i]{stem} =~ s/-//g;
 
     }
     return @mywords;
@@ -210,9 +210,9 @@ sub iumlaut {
 
     # this can not be a historically accurate iumlaut, since we are working synchron. from infinitive
     $myvowels[1] = $myvowels[0];
-    $myvowels[0] =~ s/^e$/i/;           # e > i
-    $myvowels[0] =~ s/^o$/e/;           # o > e
-    $myvowels[0] =~ s/^u$/y/;           # u > y
+    $myvowels[0] =~ s/^e$/i/;    # e > i
+    $myvowels[0] =~ s/^o$/e/;    # o > e
+    $myvowels[0] =~ s/^u$/y/;    # u > y
     $myvowels[0] =~ s/^\x{00E6}$/e/;    # æ > e
     if ($myvowels[0] =~ s/^a$/\x{00E6}/) { $myvowels[2] = "e"; }    # a > æ (later e)
     $myvowels[0] =~ s/^\x{00E1}$/\x{001FD}/;                        # á > ǽ
@@ -225,7 +225,7 @@ sub iumlaut {
     if ($myvowels[0] =~ s/^\x{00E9}a$/\x{00ED}e/) {
         $myvowels[2] = "\x{00ED}";
     }                                                          # éa > íe (later > í,ý but sometimes short ie?)
-    $myvowels[0] =~ s/^\x{00E9}o$/\x{00ED}e/;                                         # éo > íe (does it happen?)
+    $myvowels[0] =~ s/^\x{00E9}o$/\x{00ED}e/;                  # éo > íe (does it happen?)
     if ($myvowels[0] =~ s/^[\x{00ED}]o$/\x{00ED}e/) { $myvowels[2] = "\x{00ED}"; }    # ío > íe (later > í,ý)
 
     # we return an array of vowels in mutated and non-mutated forms, 1 is unmutated
@@ -247,17 +247,17 @@ sub stem_length {
     my $mylength = 0;
     $mystem =~
 m/^.*?($vowel_regex$vowel_regex?)([^\x{00E6}aeiyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x{00FA}\x{01FC}\x{00C1}\x{00C9}\x{00CD}\x{00DD}\x{00D3}\x{00DA}]*)(.*)/;
-    my $myvowel      = $1;
+    my $myvowel = $1;
     my $myconsonants = "";
-    my $mysecond     = "";
+    my $mysecond = "";
     if ($3) { $mysecond = $3; }
     if ($2) { $myconsonants = $2; $myconsonants =~ s/sc/s/; $myconsonants =~ s/cg/c/; }
-    if ($myvowel =~ m/$lvowel_regex/) { $mylength = 1; }  #long stem vowel = long stem
-    if (length($myconsonants) > 1)    { $mylength = 1; }  #two or more consonants = stem ends in a consonant = long stem
+    if ($myvowel =~ m/$lvowel_regex/) { $mylength = 1; }    #long stem vowel = long stem
+    if (length($myconsonants) > 1) { $mylength = 1; }    #two or more consonants = stem ends in a consonant = long stem
 
     if (($mysecond eq "") && (length($myconsonants) > 0)) {
         $mylength = 1;
-    }                                                     #monosylabic stem ending in a consonant = long stem
+    }                                                    #monosylabic stem ending in a consonant = long stem
     return $mylength;
 }
 
@@ -267,7 +267,7 @@ sub count_syllables {
     my $counter = 0;
     for my $i (0 .. $#mywords) {
         $counter = ($mywords[$i]{stem} =~ s/($vowel_regex$consonant_regex)/$1/g)
-          ;                                               #how many times vowel+consonant combination appears in stem
+          ;                                              #how many times vowel+consonant combination appears in stem
         $counter = $counter +
           ($mywords[$i]{stem} =~ s/($vowel_regex)$/$1/g);    #plus the final vowel, if there is one = syllable count
         if ($mywords[$i]{stem} !~ m/$consonant_regex/) { $counter = 1; }   #if there is no consonant, syllable count = 1
@@ -278,12 +278,11 @@ sub count_syllables {
 
 # COUNT SYLLABLES for a single item
 sub syllab {
-    my $myword  = @_[0];
+    my $myword = @_[0];
     my $counter = 0;
     $counter =
       ($myword =~ s/($vowel_regex$consonant_regex)/$1/g);    #how many times vowel+consonant combination appears in stem
     $counter = $counter + ($myword =~ s/($vowel_regex)$/$1/g);   #plus the final vowel, if there is one = syllable count
-         #if ($myword !=~ m/$consonant_regex/) {$counter = 1;} 	#if there is no consonant, syllable count = 1
     return $counter;
 }
 
@@ -307,13 +306,13 @@ sub set_verb_paradigm {
     for my $i (0 .. $#verbs_mywords) {
         for (my $k1 = 0 ; $k1 < @vparadigms ; $k1++) {
             my $vparadigm = $vparadigms[$k1]{title};
-            my $vtype     = $vparadigms[$k1]{type};
+            my $vtype = $vparadigms[$k1]{type};
             if (
                 ($verbs_mywords[$i]{stem} eq $vparadigm)
                 && (   (($vtype eq "w") && ($verbs_mywords[$i]{vb_weak} == 1))
                     || (($vtype eq "pp") && ($verbs_mywords[$i]{vb_pretpres} == 1))
-                    || (($vtype eq "a")  && ($verbs_mywords[$i]{vb_anomalous} == 1))
-                    || (($vtype eq "s")  && ($verbs_mywords[$i]{vb_strong} == 1)))
+                    || (($vtype eq "a") && ($verbs_mywords[$i]{vb_anomalous} == 1))
+                    || (($vtype eq "s") && ($verbs_mywords[$i]{vb_strong} == 1)))
               )
             {
                 push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$k1]);
@@ -349,8 +348,6 @@ sub set_verb_paradigm {
                 {
                     unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
                         @{ $verbs_mywords[$i]{vb_paradigm} } = @{ $assigned_mywords[$y]{vb_paradigm} };
-
-#					print ("stem1: $verbs_mywords[$i]{title} - stem: $verbs_mywords[$i]{stem} - $verbs_mywords[$i]{vb_paradigm}[0]{title}\n");
                     }
                 }
                 $y++;
@@ -369,7 +366,7 @@ sub set_verb_paradigm {
     my $maxy = $#assigned_mywords;
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
-            my $y          = 0;
+            my $y = 0;
             my $mod_match1 = $verbs_mywords[$i]{stem};
             $mod_match1 =~ s/^($prefix_regex)-?(.*)/$2/g;
             my $mod_match2 = $mod_match1;
@@ -399,8 +396,6 @@ sub set_verb_paradigm {
 
                         #since we have discovered an unmarked second prefix, we store a new, shorter stem
                         $verbs_mywords[$i]{stem} = $mod_match1;
-
-#					print ("stem2: $verbs_mywords[$i]{title} - stem: $verbs_mywords[$i]{stem} - $verbs_mywords[$i]{vb_paradigm}[0]{title} - $assigned_mywords[$y]{title} - $assigned_mywords[$y]{stem}\n");
                     }
                 }
                 $y++;
@@ -478,7 +473,7 @@ sub set_verb_paradigm {
     my $maxy = $#assigned_mywords;
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
-            my $y          = 0;
+            my $y = 0;
             my $mod_match1 = $verbs_mywords[$i]{stem};
             $mod_match1 =~ s/^($prefix_regex)-?(.*)/$2/g;
             my $mod_match2 = $mod_match1;
@@ -529,19 +524,14 @@ sub set_verb_paradigm {
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
 
-            #	STRONG VERBS
+            # STRONG VERBS
             if ($verbs_mywords[$i]{vb_strong} == 1) {
-
-                #		unless (($verbs_mywords[$i]{vb_paradigm}[0]) && ($proceed eq "s")) {
-                #		unless ($verbs_mywords[$i]{vb_paradigm}[0]{type} eq "s") {
                 $verbs_mywords[$i]{stem} =~ m/^($vowel_regex*?.*?)($vowel_regex$vowel_regex*)/;
                 my $pre_vowel = $1;
-                my $vowel     = $2;
+                my $vowel = $2;
                 $verbs_mywords[$i]{stem} =~
                   m/^$vowel_regex*?.*?$vowel_regex$vowel_regex*?($consonant_regex.*?)$vowel_regex/;
                 my $post_vowel = $1;
-
-#			print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $verbs_mywords[$i]{vb_paradigm}[0]{type}\n");
                 my $post_vowel_length = length($post_vowel);
                 my $assigned_paradigm = 0;
 
@@ -555,8 +545,6 @@ sub set_verb_paradigm {
                     # í/ý + s = rísan
                     if ($post_vowel =~ m/^s/) { $assigned_paradigm = 3; }
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # éo + one cons. = béodan
@@ -566,113 +554,84 @@ sub set_verb_paradigm {
                     # éo + s = céosan
                     if ($post_vowel =~ m/^s/) { $assigned_paradigm = 6; }
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # ú + one cons. = brúcan
                 elsif (($vowel eq "\x{00FA}") && ($post_vowel_length == 1)) {
                     $assigned_paradigm = 9;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # e + l + one cons. = helpan
                 elsif (($vowel eq "e") && ($post_vowel =~ m/^l./)) {
                     $assigned_paradigm = 13;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # e + two cons. = bregdan
                 elsif (($vowel eq "e") && ($post_vowel_length == 2)) {
                     $assigned_paradigm = 16;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # e + l/r = beran
                 elsif (($vowel eq "e") && ($post_vowel =~ m/^[rl]$/)) {
                     $assigned_paradigm = 19;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # e + [ptcdgfsþ] = metan
                 elsif (($vowel eq "e") && ($post_vowel =~ m/^[ptcdgfs\x{00FE}]$/)) {
                     $assigned_paradigm = 22;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # a + one cons. = faran
                 elsif (($vowel eq "a") && ($post_vowel_length == 1)) {
                     $assigned_paradigm = 31;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # eo + r/h + one cons. = weorpan/feohtan
                 elsif (($vowel eq "eo") && ($post_vowel =~ m/^[rh]./)) {
                     $assigned_paradigm = 14;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # g + ie + two cons. = gieldan
                 elsif (($prevowel eq "g") && ($vowel eq "ie") && ($post_vowel_length == 2)) {
                     $assigned_paradigm = 63;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # i/y + nasal + one cons. = bindan
                 elsif ((($vowel eq "i") || ($vowel eq "y") || ($vowel eq "ie")) && ($post_vowel =~ m/[nm]./)) {
                     $assigned_paradigm = 10;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # á = hátan
                 elsif (($vowel eq "\x{00E1}") && ($post_vowel_length == 1)) {
                     $assigned_paradigm = 40;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
 
                 # ó = blótan
                 elsif (($vowel eq "\x{00F3}") && ($post_vowel_length == 1)) {
                     $assigned_paradigm = 48;
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel - $mylength - $vparadigms[$assigned_paradigm]{title}\n");
                 }
             }
 
-            #	WEAK VERBS
+            # WEAK VERBS
 
             if ($verbs_mywords[$i]{vb_weak} == 1) {
-
-                #		unless (($verbs_mywords[$i]{vb_paradigm}[0]) && ($mytpe eq "w")) {
-                #		if ($verbs_mywords[$i]{vb_paradigm}[0]{type} ne "w") {
                 $verbs_mywords[$i]{stem} =~ m/^($vowel_regex*?.*?)($vowel_regex$vowel_regex*)/;
                 my $pre_vowel = $1;
-                my $vowel     = $2;
+                my $vowel = $2;
                 $verbs_mywords[$i]{stem} =~
                   m/^$vowel_regex*?.*?$vowel_regex$vowel_regex*?($consonant_regex.*?)$vowel_regex/;
                 my $post_vowel = $1;
-
-#			print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - $pre_vowel - $vowel - $post_vowel\n");
                 my $post_vowel_length = length($post_vowel);
                 my $assigned_paradigm = 0;
 
@@ -686,8 +645,6 @@ sub set_verb_paradigm {
                         $assigned_paradigm = 87;
                     }
                     push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-
-#				print (OUTPUT "-rian: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid} - $i) - $pre_vowel - $vowel - $post_vowel - $mylength - $verbs_mywords[$i]{vb_paradigm}[$pcount]{title}\n");
                 }
 
                 # the rest of -ian = sealfian
@@ -756,7 +713,7 @@ sub set_verb_paradigm {
     my $maxy = $#assigned_mywords;
     for my $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
-            my $y          = 0;
+            my $y = 0;
             my $mod_match1 = $verbs_mywords[$i]{stem};
             $mod_match1 =~ s/^($prefix_regex)-?(.*)/$2/g;
             $mod_match1 = remove_dia($mod_match1);
@@ -799,18 +756,13 @@ sub set_verb_paradigm {
    #THE REST OF THE STRONG VERBS ARE ASSIGNED TO HELPAN, ALL OTHER TO DÉMAN - mostly variants of already assigned verbs
     for $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
-            if   ($verbs_mywords[$i]{vb_strong} == 1) { $assigned_paradigm = 13; }
-            else                                      { $assigned_paradigm = 76; }
+            if ($verbs_mywords[$i]{vb_strong} == 1) { $assigned_paradigm = 13; }
+            else { $assigned_paradigm = 76; }
             push(@{ $verbs_mywords[$i]{vb_paradigm} }, $vparadigms[$assigned_paradigm]);
-            push(@assigned_mywords,                    $verbs_mywords[$i]);
-
-#print (OUTPUT "unassigned: $verbs_mywords[$i]{title} - $verbs_mywords[$i]{stem} - s: $verbs_mywords[$i]{vb_strong},w: $verbs_mywords[$i]{vb_weak},pretpres: $verbs_mywords[$i]{vb_pretpres},a: $verbs_mywords[$i]{vb_anomalous}\n");
+            push(@assigned_mywords, $verbs_mywords[$i]);
         }
     }
     print "$num_verbs out of $#assigned_mywords verbs assigned\n";
-
-#	my $unassigned = 0; for my $i (0..$#verbs_mywords) {unless ($verbs_mywords[$i]{vb_paradigm}[0]) {print (OUTPUT "unassigned: $verbs_mywords[$i]{title} ($verbs_mywords[$i]{nid}) - *$verbs_mywords[$i]{vb_paradigm}[0]{title}* - stem: $verbs_mywords[$i]{stem} - $pre_vowel - $vowel - $post_vowel\n"); $unassigned++}}	print "\n Unassiged: $unassigned";
-#	for my $i (0..$#assigned_mywords) { my $count=0; for my $y (0..$#assigned_mywords) {if ($assigned_mywords[$i]{nid} == $assigned_mywords[$y]{nid}) {$count++; } } if ($count>1){print "$count - $assigned_mywords[$i]{title}\n";}}
     return @assigned_mywords;
 
 }
@@ -838,13 +790,13 @@ sub set_adj_paradigm {
                     }
                     else { $mywords[$i]{adj_paradigm}[$counter] = "til"; $counter++; }
                 }    #TIL
-                when (/426/) { $mywords[$i]{adj_paradigm}[$counter] = "blind";        $counter++; continue; }    # BLIND
-                when (/428/) { $mywords[$i]{adj_paradigm}[$counter] = "h\x{00E9}ah";  $counter++; continue; }    # HEAH
-                when (/430/) { $mywords[$i]{adj_paradigm}[$counter] = "manig";        $counter++; continue; }    # MANIG
-                when (/431/) { $mywords[$i]{adj_paradigm}[$counter] = "h\x{00E1}lig"; $counter++; continue; }    # HALIG
-                when (/434/) { $mywords[$i]{adj_paradigm}[$counter] = "wilde";        $counter++; continue; }    # WILDE
-                when (/436/) { $mywords[$i]{adj_paradigm}[$counter] = "gearu";        $counter++; continue; }    # GEARU
-                when (/437/) { $mywords[$i]{adj_paradigm}[$counter] = "blind";        $counter++; continue; }    # BLIND
+                when (/426/) { $mywords[$i]{adj_paradigm}[$counter] = "blind"; $counter++; continue; }    # BLIND
+                when (/428/) { $mywords[$i]{adj_paradigm}[$counter] = "h\x{00E9}ah"; $counter++; continue; }    # HEAH
+                when (/430/) { $mywords[$i]{adj_paradigm}[$counter] = "manig"; $counter++; continue; }          # MANIG
+                when (/431/) { $mywords[$i]{adj_paradigm}[$counter] = "h\x{00E1}lig"; $counter++; continue; }   # HALIG
+                when (/434/) { $mywords[$i]{adj_paradigm}[$counter] = "wilde"; $counter++; continue; }          # WILDE
+                when (/436/) { $mywords[$i]{adj_paradigm}[$counter] = "gearu"; $counter++; continue; }          # GEARU
+                when (/437/) { $mywords[$i]{adj_paradigm}[$counter] = "blind"; $counter++; continue; }          # BLIND
             }
             if ($mywords[$i]{stem} =~ m/\x{00FE}weorh$/) { $mywords[$i]{adj_paradigm}[0] = "\x{00FE}weorh"; }
         }
@@ -1013,7 +965,7 @@ sub set_noun_paradigm {
                 $mynouns[$i]{noun_paradigm}[$counter] = "st\x{00E1}n";
                 $counter++;
             }    #STÁN
-            when (/356/) { $mynouns[$i]{noun_paradigm}[$counter] = "cynn"; $counter++; }                      #CYNN
+            when (/356/) { $mynouns[$i]{noun_paradigm}[$counter] = "cynn"; $counter++; }    #CYNN
             when (/343|349|348/) { $mynouns[$i]{noun_paradigm}[$counter] = "word"; $counter++; continue; }    # WORD
             when (/344|350|357|393|358/) { $mynouns[$i]{noun_paradigm}[$counter] = "hof"; $counter++; continue; }  # HOF
             when (/336/) { $mynouns[$i]{noun_paradigm}[$counter] = "d\x{00E6}g"; $counter++; continue; }    # DÆG
@@ -1023,20 +975,20 @@ sub set_noun_paradigm {
                 $counter++;
                 continue;
             }                                                                                               # ÁR
-            when (/383/)      { $mynouns[$i]{noun_paradigm}[$counter] = "strengu";     $counter++; continue; } # STRENGU
-            when (/397/)      { $mynouns[$i]{noun_paradigm}[$counter] = "feld";        $counter++; continue; } # FELD
-            when (/398/)      { $mynouns[$i]{noun_paradigm}[$counter] = "hand";        $counter++; continue; } # HAND
-            when (/396/)      { $mynouns[$i]{noun_paradigm}[$counter] = "sunu";        $counter++; continue; } # SUNU
-            when (/398/)      { $mynouns[$i]{noun_paradigm}[$counter] = "duru";        $counter++; continue; } # DURU
-            when (/359|360/)  { $mynouns[$i]{noun_paradigm}[$counter] = "bearu";       $counter++; continue; } # BEARU
-            when (/362|363/)  { $mynouns[$i]{noun_paradigm}[$counter] = "bealu";       $counter++; continue; } # BEALU
-            when (/3]80|381/) { $mynouns[$i]{noun_paradigm}[$counter] = "beadu";       $counter++; continue; } # BEADU
-            when (/401/)      { $mynouns[$i]{noun_paradigm}[$counter] = "guma";        $counter++; continue; } # GUMA
-            when (/402/)      { $mynouns[$i]{noun_paradigm}[$counter] = "fr\x{00E9}a"; $counter++; continue; } # FRÉA
-            when (/404/)      { $mynouns[$i]{noun_paradigm}[$counter] = "tunge";       $counter++; continue; } # TUNGE
-            when (/405/)      { $mynouns[$i]{noun_paradigm}[$counter] = "b\x{00E9}o";  $counter++; continue; } # BÉO
-            when (/407/)      { $mynouns[$i]{noun_paradigm}[$counter] = "\x{00E9}age"; $counter++; continue; } # ÉAGE
-            when (/418/) { $mynouns[$i]{noun_paradigm}[$counter] = "w\x{00ED}gend"; $counter++; continue; }    # WÍGEND
+            when (/383/) { $mynouns[$i]{noun_paradigm}[$counter] = "strengu"; $counter++; continue; }       # STRENGU
+            when (/397/) { $mynouns[$i]{noun_paradigm}[$counter] = "feld"; $counter++; continue; }          # FELD
+            when (/398/) { $mynouns[$i]{noun_paradigm}[$counter] = "hand"; $counter++; continue; }          # HAND
+            when (/396/) { $mynouns[$i]{noun_paradigm}[$counter] = "sunu"; $counter++; continue; }          # SUNU
+            when (/398/) { $mynouns[$i]{noun_paradigm}[$counter] = "duru"; $counter++; continue; }          # DURU
+            when (/359|360/) { $mynouns[$i]{noun_paradigm}[$counter] = "bearu"; $counter++; continue; }     # BEARU
+            when (/362|363/) { $mynouns[$i]{noun_paradigm}[$counter] = "bealu"; $counter++; continue; }     # BEALU
+            when (/3]80|381/) { $mynouns[$i]{noun_paradigm}[$counter] = "beadu"; $counter++; continue; }    # BEADU
+            when (/401/) { $mynouns[$i]{noun_paradigm}[$counter] = "guma"; $counter++; continue; }          # GUMA
+            when (/402/) { $mynouns[$i]{noun_paradigm}[$counter] = "fr\x{00E9}a"; $counter++; continue; }   # FRÉA
+            when (/404/) { $mynouns[$i]{noun_paradigm}[$counter] = "tunge"; $counter++; continue; }         # TUNGE
+            when (/405/) { $mynouns[$i]{noun_paradigm}[$counter] = "b\x{00E9}o"; $counter++; continue; }    # BÉO
+            when (/407/) { $mynouns[$i]{noun_paradigm}[$counter] = "\x{00E9}age"; $counter++; continue; }   # ÉAGE
+            when (/418/) { $mynouns[$i]{noun_paradigm}[$counter] = "w\x{00ED}gend"; $counter++; continue; } # WÍGEND
         }
         if ($counter) { push(@assigned_nouns, $mynouns[$i]); }
     }
@@ -1109,53 +1061,53 @@ sub set_noun_paradigm {
             # -a > weak
             if ($mynouns[$i]{stem} =~ m/a$/) {
 
-                #a.	–a & short V > guma (W401)
+                #a. –a & short V > guma (W401)
                 if ($vowel =~ m/$lvowel_regex/) {
                     $mynouns[$i]{noun_paradigm}[$counter] = "fr\x{00E9}a";
                     $counter++;
 
-                    #b.	–a & long V > fréa (W402)
+                    #b. –a & long V > fréa (W402)
                 }
                 else { $mynouns[$i]{noun_paradigm}[$counter] = "guma"; $counter++; }
             }
             if ($mynouns[$i]{stem} =~ m/e$/) {
 
-                #c.	–e & fem. > tunge (W404)
+                #c. –e & fem. > tunge (W404)
                 if ($mynouns[$i]{n_fem} == 1) { $mynouns[$i]{noun_paradigm}[$counter] = "tunge"; $counter++; }
 
-                #d.	–e & masc. > ja/i stems stán (wine W386 = ende W354)
+                #d. –e & masc. > ja/i stems stán (wine W386 = ende W354)
                 if ($mynouns[$i]{n_masc} == 1) { $mynouns[$i]{noun_paradigm}[$counter] = "st\x{00E1}n"; $counter++; }
 
-                #e.	–e & neut. > ja/i stems hof (spere W393 = wíte W357)
+                #e. –e & neut. > ja/i stems hof (spere W393 = wíte W357)
                 if ($mynouns[$i]{n_neut} == 1) { $mynouns[$i]{noun_paradigm}[$counter] = "hof"; $counter++; }
             }
 
-            #f.	–nd & masc. > wígend (W418)
+            #f. –nd & masc. > wígend (W418)
             if (($mynouns[$i]{stem} =~ m/nd$/) && ($mynouns[$i]{n_masc} == 1)) {
                 $mynouns[$i]{noun_paradigm}[$counter] = "w\x{00ED}gend";
                 $counter++;
             }
 
-            #g.	–els, –scipe > stán
+            #g. –els, –scipe > stán
             if ($mynouns[$i]{stem} =~ m/(els)|(scipe)$/) {
                 $mynouns[$i]{noun_paradigm}[$counter] = "st\x{00E1}n";
                 $counter++;
             }
 
-            #h.	–incel > hof
+            #h. –incel > hof
             if ($mynouns[$i]{stem} =~ m/incel$/) { $mynouns[$i]{noun_paradigm}[$counter] = "hof"; $counter++; }
 
-            #i.	–ness, -niss, -ung > ár
+            #i. –ness, -niss, -ung > ár
             if ($mynouns[$i]{stem} =~ m/(ness)|(niss)|(nyss)|(ung)$/) {
                 $mynouns[$i]{noun_paradigm}[$counter] = "\x{00E1}r";
                 $counter++;
             }
 
-            #g.	–mono syl. & root V & masculine = æ/ǽ > dæg (W336, i-mutation!)
+            #g. –mono syl. & root V & masculine = æ/ǽ > dæg (W336, i-mutation!)
             if (($vowel =~ m/\x{00E6}|\x{01FD}/) && ($mywords[$i]{syllables} < 2)) {
                 if ($mynouns[$i]{n_masc} == 1) { $mynouns[$i]{noun_paradigm}[$counter] = "d\x{00E6}g"; $counter++; }
 
-                #h.	–mono syl. & root V & neuter = æ/ǽ > fæt (W345, i-mutation!)
+                #h. –mono syl. & root V & neuter = æ/ǽ > fæt (W345, i-mutation!)
                 if ($mynouns[$i]{n_neut} == 1) { $mynouns[$i]{noun_paradigm}[$counter] = "f\x{00E6}t"; $counter++; }
             }
             if ($counter) { push(@assigned_nouns, $mynouns[$i]); }
@@ -1289,9 +1241,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1308,9 +1260,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1331,9 +1283,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-es";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1354,9 +1306,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1379,9 +1331,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-as";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -1401,9 +1353,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-as";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1425,9 +1377,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1449,9 +1401,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1468,9 +1420,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1483,9 +1435,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1501,9 +1453,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-es";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1519,9 +1471,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1534,9 +1486,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -1546,9 +1498,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1564,9 +1516,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1582,9 +1534,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1603,9 +1555,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1619,9 +1571,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1638,9 +1590,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-es";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1657,9 +1609,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1673,9 +1625,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -1683,9 +1635,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -1696,9 +1648,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -1706,9 +1658,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1725,9 +1677,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1744,9 +1696,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1764,9 +1716,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1779,9 +1731,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1794,9 +1746,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-es";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1809,9 +1761,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1827,9 +1779,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-as";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -1842,9 +1794,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-as";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1860,9 +1812,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1878,9 +1830,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1898,9 +1850,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1913,9 +1865,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1928,9 +1880,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-es";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1943,9 +1895,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -1961,9 +1913,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -1971,9 +1923,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -1986,9 +1938,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -1996,9 +1948,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2013,9 +1965,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2031,9 +1983,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2051,9 +2003,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2067,9 +2019,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2086,9 +2038,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2105,9 +2057,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2125,9 +2077,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2135,9 +2087,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2152,9 +2104,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2162,9 +2114,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2181,9 +2133,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2191,9 +2143,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-na";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2201,9 +2153,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ena";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2220,9 +2172,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2240,9 +2192,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2250,9 +2202,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2266,9 +2218,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2276,9 +2228,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2286,9 +2238,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2302,9 +2254,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2312,9 +2264,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2322,9 +2274,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2338,9 +2290,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2348,9 +2300,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2358,9 +2310,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2374,9 +2326,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2384,9 +2336,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2394,9 +2346,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2408,9 +2360,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2418,9 +2370,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2428,9 +2380,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2444,9 +2396,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2460,9 +2412,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2482,9 +2434,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2500,9 +2452,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2518,9 +2470,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2536,9 +2488,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2554,9 +2506,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2570,9 +2522,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2588,9 +2540,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2606,9 +2558,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2629,9 +2581,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2639,9 +2591,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2658,9 +2610,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2668,9 +2620,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2687,9 +2639,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2706,9 +2658,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2725,9 +2677,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2742,9 +2694,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2761,9 +2713,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2780,9 +2732,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2800,9 +2752,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2810,9 +2762,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2826,9 +2778,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2836,9 +2788,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2852,9 +2804,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-wes";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2868,9 +2820,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-we";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2884,9 +2836,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-was";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2898,9 +2850,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-was";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2914,9 +2866,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-wa";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2930,9 +2882,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-wum";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2950,9 +2902,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2960,9 +2912,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -2976,9 +2928,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -2986,9 +2938,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3002,9 +2954,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-wes";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3018,9 +2970,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-we";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3034,9 +2986,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3044,9 +2996,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3058,9 +3010,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3068,9 +3020,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3084,9 +3036,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-wa";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3100,9 +3052,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-wum";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3128,9 +3080,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3144,9 +3096,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3160,9 +3112,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3176,9 +3128,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3192,9 +3144,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3206,9 +3158,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3222,9 +3174,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ena";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3238,9 +3190,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3258,9 +3210,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3274,9 +3226,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3290,9 +3242,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3306,9 +3258,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3322,9 +3274,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3336,9 +3288,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3352,9 +3304,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ana";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3368,9 +3320,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3378,9 +3330,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-am";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3388,9 +3340,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-aum";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3408,9 +3360,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3424,9 +3376,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3434,9 +3386,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ean";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3450,9 +3402,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3460,9 +3412,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ean";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3476,9 +3428,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3486,9 +3438,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ean";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3502,9 +3454,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3512,9 +3464,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ean";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3526,9 +3478,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3536,9 +3488,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ean";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3552,9 +3504,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ena";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3568,9 +3520,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3578,9 +3530,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-eum";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3597,9 +3549,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3612,9 +3564,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-n";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3627,9 +3579,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-n";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3642,9 +3594,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-n";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3657,9 +3609,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-n";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3670,9 +3622,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-n";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3685,9 +3637,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-na";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3700,9 +3652,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-m";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3720,9 +3672,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3736,9 +3688,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3746,9 +3698,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ean";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3762,9 +3714,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3772,9 +3724,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ean";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3788,9 +3740,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3798,9 +3750,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ean";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3814,9 +3766,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3824,9 +3776,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ean";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3838,9 +3790,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-an";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3848,9 +3800,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ean";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3864,9 +3816,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ena";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3880,9 +3832,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3890,9 +3842,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-eum";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3909,9 +3861,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3924,9 +3876,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3939,9 +3891,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-es";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3954,9 +3906,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -3969,9 +3921,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3979,9 +3931,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -3989,9 +3941,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-as";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -4002,9 +3954,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -4012,9 +3964,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -4022,9 +3974,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-as";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -4037,9 +3989,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-ra";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -4052,9 +4004,9 @@ sub generate_nounforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -4081,9 +4033,9 @@ sub generate_adjforms {
 
   # template :LEMMA | STEM | BT-ID | WORDCLASS | GRADE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
                 %formhash = (
-                    "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                    "BT",     $bt_id,              "wordclass", "adjective",
-                    "class1", "strong",            "paradigm",  $mywords[$i]{adj_paradigm}[0],
+                    "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                    "BT", $bt_id, "wordclass", "adjective",
+                    "class1", "strong", "paradigm", $mywords[$i]{adj_paradigm}[0],
                     "wright", $mywords[$i]{wright}
                 );
                 if ($mywords[$i]{pronoun} == 1) { $formhash{"wordclass"} = "pronoun"; }
@@ -4101,384 +4053,384 @@ sub generate_adjforms {
                         $title_alt = $mywords[$i]{prefix} . "-" . $title_alt;
                     }
 
-                    $formhash{"function"}    = "PoSgMaNo";
+                    $formhash{"function"} = "PoSgMaNo";
                     $formhash{"probability"} = "0";
                     my $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaAc";
+                    $formhash{"function"} = "PoSgMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ne";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ne";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaAc";
+                    $formhash{"function"} = "PoSgMaAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaIs";
+                    $formhash{"function"} = "PoSgMaIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoSgNeNo";
+                    $formhash{"function"} = "PoSgNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeAc";
+                    $formhash{"function"} = "PoSgNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeGe";
+                    $formhash{"function"} = "PoSgNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeIs";
+                    $formhash{"function"} = "PoSgNeIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeAc";
+                    $formhash{"function"} = "PoSgFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeGe";
+                    $formhash{"function"} = "PoSgFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeGe";
+                    $formhash{"function"} = "PoSgFeGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeDa";
+                    $formhash{"function"} = "PoSgFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeDa";
+                    $formhash{"function"} = "PoSgFeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
-                    $formhash{"function"}    = "PoPlMaNo";
+                    $formhash{"function"} = "PoPlMaNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaNo";
+                    $formhash{"function"} = "PoPlMaNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaAc";
+                    $formhash{"function"} = "PoPlMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaAc";
+                    $formhash{"function"} = "PoPlMaAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaGe";
+                    $formhash{"function"} = "PoPlMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaGe";
+                    $formhash{"function"} = "PoPlMaGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaDa";
+                    $formhash{"function"} = "PoPlMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeGe";
+                    $formhash{"function"} = "PoPlNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeGe";
+                    $formhash{"function"} = "PoPlNeGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeDa";
+                    $formhash{"function"} = "PoPlNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-a";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-a";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeGe";
+                    $formhash{"function"} = "PoPlFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeGe";
+                    $formhash{"function"} = "PoPlFeGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeDa";
+                    $formhash{"function"} = "PoPlFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
@@ -4488,357 +4440,357 @@ sub generate_adjforms {
 
                     #Sg
                     #Ma
-                    $formhash{"function"}    = "PoSgMaNo";
+                    $formhash{"function"} = "PoSgMaNo";
                     $formhash{"probability"} = "0";
                     my $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaAc";
+                    $formhash{"function"} = "PoSgMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ne";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ne";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaAc";
+                    $formhash{"function"} = "PoSgMaAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaIs";
+                    $formhash{"function"} = "PoSgMaIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoSgNeNo";
+                    $formhash{"function"} = "PoSgNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeAc";
+                    $formhash{"function"} = "PoSgNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeGe";
+                    $formhash{"function"} = "PoSgNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeIs";
+                    $formhash{"function"} = "PoSgNeIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeAc";
+                    $formhash{"function"} = "PoSgFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeGe";
+                    $formhash{"function"} = "PoSgFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeGe";
+                    $formhash{"function"} = "PoSgFeGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeDa";
+                    $formhash{"function"} = "PoSgFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeDa";
+                    $formhash{"function"} = "PoSgFeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
-                    $formhash{"function"}    = "PoPlMaNo";
+                    $formhash{"function"} = "PoPlMaNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaNo";
+                    $formhash{"function"} = "PoPlMaNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaAc";
+                    $formhash{"function"} = "PoPlMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaAc";
+                    $formhash{"function"} = "PoPlMaAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaGe";
+                    $formhash{"function"} = "PoPlMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaGe";
+                    $formhash{"function"} = "PoPlMaGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaDa";
+                    $formhash{"function"} = "PoPlMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeGe";
+                    $formhash{"function"} = "PoPlNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeGe";
+                    $formhash{"function"} = "PoPlNeGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeDa";
+                    $formhash{"function"} = "PoPlNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeGe";
+                    $formhash{"function"} = "PoPlFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeGe";
+                    $formhash{"function"} = "PoPlFeGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeDa";
+                    $formhash{"function"} = "PoPlFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
@@ -4858,366 +4810,366 @@ sub generate_adjforms {
                         $title_alt = $mywords[$i]{prefix} . "-" . $title_alt;
                     }
                     $title_alt =~ s/h$//;
-                    $formhash{"function"}    = "PoSgMaNo";
+                    $formhash{"function"} = "PoSgMaNo";
                     $formhash{"probability"} = "0";
                     my $form_parts = "" . $title_alt . "h-0";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaAc";
+                    $formhash{"function"} = "PoSgMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ne";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ne";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaAc";
+                    $formhash{"function"} = "PoSgMaAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "" . $title_alt . "n-ne";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_alt . "n-ne";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-s";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-s";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-m";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-m";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaIs";
+                    $formhash{"function"} = "PoSgMaIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoSgNeNo";
+                    $formhash{"function"} = "PoSgNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "" . $title_alt . "h-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_alt . "h-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeAc";
+                    $formhash{"function"} = "PoSgNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "" . $title_alt . "h-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_alt . "h-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeGe";
+                    $formhash{"function"} = "PoSgNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-s";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-s";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeGe";
+                    $formhash{"function"} = "PoSgNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-m";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-m";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeIs";
+                    $formhash{"function"} = "PoSgNeIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "" . $title_alt . "-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_alt . "-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeAc";
+                    $formhash{"function"} = "PoSgFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeGe";
+                    $formhash{"function"} = "PoSgFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeGe";
+                    $formhash{"function"} = "PoSgFeGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "" . $title_alt . "r-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_alt . "r-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeDa";
+                    $formhash{"function"} = "PoSgFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeDa";
+                    $formhash{"function"} = "PoSgFeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "" . $title_alt . "r-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_alt . "r-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
-                    $formhash{"function"}    = "PoPlMaNo";
+                    $formhash{"function"} = "PoPlMaNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaAc";
+                    $formhash{"function"} = "PoPlMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaGe";
+                    $formhash{"function"} = "PoPlMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaGe";
+                    $formhash{"function"} = "PoPlMaGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "" . $title_alt . "r-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_alt . "r-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaDa";
+                    $formhash{"function"} = "PoPlMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-m";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-m";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaDa";
+                    $formhash{"function"} = "PoPlMaDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeGe";
+                    $formhash{"function"} = "PoPlNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeGe";
+                    $formhash{"function"} = "PoPlNeGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "" . $title_alt . "r-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_alt . "r-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeDa";
+                    $formhash{"function"} = "PoPlNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-m";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-m";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeDa";
+                    $formhash{"function"} = "PoPlNeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeGe";
+                    $formhash{"function"} = "PoPlFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeGe";
+                    $formhash{"function"} = "PoPlFeGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "" . $title_alt . "r-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_alt . "r-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeDa";
+                    $formhash{"function"} = "PoPlFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-m";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-m";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeDa";
+                    $formhash{"function"} = "PoPlFeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
@@ -5229,277 +5181,277 @@ sub generate_adjforms {
                     if ($mywords[$i]{papart} == 1) {
                         $mywords[$i]{adj_paradigm}[0] = "manig";
                         %formhash = (
-                            "title",    $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,              "wordclass", "participle",
-                            "class1",   "strong",            "class2",    "past",
-                            "paradigm", "manig",             "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "strong", "class2", "past",
+                            "paradigm", "manig", "wright", $mywords[$i]{wright}
                         );
                     }
 
                     #Sg
                     #Ma
-                    $formhash{"function"}    = "PoSgMaNo";
+                    $formhash{"function"} = "PoSgMaNo";
                     $formhash{"probability"} = "0";
                     my $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
-                    $formhash{"function"}    = "PoSgMaAc";
+                    $formhash{"function"} = "PoSgMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ne";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ne";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaIs";
+                    $formhash{"function"} = "PoSgMaIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoSgNeNo";
+                    $formhash{"function"} = "PoSgNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeAc";
+                    $formhash{"function"} = "PoSgNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeGe";
+                    $formhash{"function"} = "PoSgNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeIs";
+                    $formhash{"function"} = "PoSgNeIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeAc";
+                    $formhash{"function"} = "PoSgFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeGe";
+                    $formhash{"function"} = "PoSgFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeDa";
+                    $formhash{"function"} = "PoSgFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
-                    $formhash{"function"}    = "PoPlMaNo";
+                    $formhash{"function"} = "PoPlMaNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaAc";
+                    $formhash{"function"} = "PoPlMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaGe";
+                    $formhash{"function"} = "PoPlMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaDa";
+                    $formhash{"function"} = "PoPlMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeGe";
+                    $formhash{"function"} = "PoPlNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeDa";
+                    $formhash{"function"} = "PoPlNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeGe";
+                    $formhash{"function"} = "PoPlFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeDa";
+                    $formhash{"function"} = "PoPlFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
@@ -5512,10 +5464,10 @@ sub generate_adjforms {
                     if ($mywords[$i]{papart} == 1) {
                         $mywords[$i]{adj_paradigm}[0] = "h\x{00E1}lig";
                         %formhash = (
-                            "title",    $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,              "wordclass", "participle",
-                            "class1",   "strong",            "class2",    "past",
-                            "paradigm", "halig",             "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "strong", "class2", "past",
+                            "paradigm", "halig", "wright", $mywords[$i]{wright}
                         );
                     }
                     else { $title_alt =~ s/($vowel_regex.*)$vowel_regex(.*?)$/$1$2/; }
@@ -5523,402 +5475,402 @@ sub generate_adjforms {
 
                     #Sg
                     #Ma
-                    $formhash{"function"}    = "PoSgMaNo";
+                    $formhash{"function"} = "PoSgMaNo";
                     $formhash{"probability"} = "0";
                     my $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaAc";
+                    $formhash{"function"} = "PoSgMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ne";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ne";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaIs";
+                    $formhash{"function"} = "PoSgMaIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaIs";
+                    $formhash{"function"} = "PoSgMaIs";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoSgNeNo";
+                    $formhash{"function"} = "PoSgNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeAc";
+                    $formhash{"function"} = "PoSgNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeGe";
+                    $formhash{"function"} = "PoSgNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeGe";
+                    $formhash{"function"} = "PoSgNeGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeIs";
+                    $formhash{"function"} = "PoSgNeIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeIs";
+                    $formhash{"function"} = "PoSgNeIs";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeAc";
+                    $formhash{"function"} = "PoSgFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeAc";
+                    $formhash{"function"} = "PoSgFeAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeGe";
+                    $formhash{"function"} = "PoSgFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeDa";
+                    $formhash{"function"} = "PoSgFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
-                    $formhash{"function"}    = "PoPlMaNo";
+                    $formhash{"function"} = "PoPlMaNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaNo";
+                    $formhash{"function"} = "PoPlMaNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaAc";
+                    $formhash{"function"} = "PoPlMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaAc";
+                    $formhash{"function"} = "PoPlMaAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaGe";
+                    $formhash{"function"} = "PoPlMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaDa";
+                    $formhash{"function"} = "PoPlMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaDa";
+                    $formhash{"function"} = "PoPlMaDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeGe";
+                    $formhash{"function"} = "PoPlNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeDa";
+                    $formhash{"function"} = "PoPlNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeDa";
+                    $formhash{"function"} = "PoPlNeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeGe";
+                    $formhash{"function"} = "PoPlFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeDa";
+                    $formhash{"function"} = "PoPlFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeDa";
+                    $formhash{"function"} = "PoPlFeDa";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
@@ -5928,10 +5880,10 @@ sub generate_adjforms {
                     if ($mywords[$i]{pspart} == 1) {
                         $mywords[$i]{adj_paradigm}[0] = "wilde";
                         %formhash = (
-                            "title",    $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,              "wordclass", "participle",
-                            "class1",   "strong",            "class2",    "present",
-                            "paradigm", "wilde",             "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "strong", "class2", "present",
+                            "paradigm", "wilde", "wright", $mywords[$i]{wright}
                         );
                     }
 
@@ -5939,295 +5891,295 @@ sub generate_adjforms {
                     #Ma
                     $title_alt = $mywords[$i]{stem};
                     $title_alt =~ s/e$//;
-                    $title_alt               = $mywords[$i]{prefix} . "-" . $title_alt;
-                    $formhash{"function"}    = "PoSgMaNo";
+                    $title_alt = $mywords[$i]{prefix} . "-" . $title_alt;
+                    $formhash{"function"} = "PoSgMaNo";
                     $formhash{"probability"} = "0";
                     my $form_parts = "$title_alt-e";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaAc";
+                    $formhash{"function"} = "PoSgMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ne";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ne";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaIs";
+                    $formhash{"function"} = "PoSgMaIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoSgNeNo";
+                    $formhash{"function"} = "PoSgNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeAc";
+                    $formhash{"function"} = "PoSgNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeGe";
+                    $formhash{"function"} = "PoSgNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-es";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeIs";
+                    $formhash{"function"} = "PoSgNeIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeAc";
+                    $formhash{"function"} = "PoSgFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeGe";
+                    $formhash{"function"} = "PoSgFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeDa";
+                    $formhash{"function"} = "PoSgFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-re";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
-                    $formhash{"function"}    = "PoPlMaNo";
+                    $formhash{"function"} = "PoPlMaNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaAc";
+                    $formhash{"function"} = "PoPlMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaGe";
+                    $formhash{"function"} = "PoPlMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaDa";
+                    $formhash{"function"} = "PoPlMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeGe";
+                    $formhash{"function"} = "PoPlNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeDa";
+                    $formhash{"function"} = "PoPlNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-a";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-a";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeGe";
+                    $formhash{"function"} = "PoPlFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ra";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeDa";
+                    $formhash{"function"} = "PoPlFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-um";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
@@ -6239,340 +6191,340 @@ sub generate_adjforms {
                     #Ma
                     $title_alt = $mywords[$i]{stem};
                     $title_alt =~ s/.$//;
-                    $title_alt               = $mywords[$i]{prefix} . "-" . $title_alt;
-                    $formhash{"function"}    = "PoSgMaNo";
+                    $title_alt = $mywords[$i]{prefix} . "-" . $title_alt;
+                    $formhash{"function"} = "PoSgMaNo";
                     $formhash{"probability"} = "0";
                     my $form_parts = "$title_alt-u";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaNo";
+                    $formhash{"function"} = "PoSgMaNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaAc";
+                    $formhash{"function"} = "PoSgMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-one";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-one";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-wes";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-wes";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-uwes";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-uwes";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaGe";
+                    $formhash{"function"} = "PoSgMaGe";
                     $formhash{"probability"} = "2";
-                    $form_parts              = "$title_alt-owes";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-owes";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaDa";
+                    $formhash{"function"} = "PoSgMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-wum";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-wum";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgMaIs";
+                    $formhash{"function"} = "PoSgMaIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-we";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-we";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoSgNeNo";
+                    $formhash{"function"} = "PoSgNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeNo";
+                    $formhash{"function"} = "PoSgNeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeAc";
+                    $formhash{"function"} = "PoSgNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeAc";
+                    $formhash{"function"} = "PoSgNeAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeGe";
+                    $formhash{"function"} = "PoSgNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-wes";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-wes";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeDa";
+                    $formhash{"function"} = "PoSgNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-wum";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-wum";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgNeIs";
+                    $formhash{"function"} = "PoSgNeIs";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-we";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-we";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeNo";
+                    $formhash{"function"} = "PoSgFeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeAc";
+                    $formhash{"function"} = "PoSgFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-we";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-we";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeGe";
+                    $formhash{"function"} = "PoSgFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ore";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ore";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoSgFeDa";
+                    $formhash{"function"} = "PoSgFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ore";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ore";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
-                    $formhash{"function"}    = "PoPlMaNo";
+                    $formhash{"function"} = "PoPlMaNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaAc";
+                    $formhash{"function"} = "PoPlMaAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-e";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaGe";
+                    $formhash{"function"} = "PoPlMaGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ora";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ora";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlMaDa";
+                    $formhash{"function"} = "PoPlMaDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-wum";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-wum";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeNo";
+                    $formhash{"function"} = "PoPlNeNo";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-u";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-u";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeAc";
+                    $formhash{"function"} = "PoPlNeAc";
                     $formhash{"probability"} = "1";
-                    $form_parts              = "$title_alt-o";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-o";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeGe";
+                    $formhash{"function"} = "PoPlNeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ora";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ora";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlNeDa";
+                    $formhash{"function"} = "PoPlNeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-wum";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-wum";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-wa";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-wa";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeNo";
+                    $formhash{"function"} = "PoPlFeNo";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-we";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-we";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-wa";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-wa";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeAc";
+                    $formhash{"function"} = "PoPlFeAc";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-we";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-we";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeGe";
+                    $formhash{"function"} = "PoPlFeGe";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-ora";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-ora";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
-                    $formhash{"function"}    = "PoPlFeDa";
+                    $formhash{"function"} = "PoPlFeDa";
                     $formhash{"probability"} = "0";
-                    $form_parts              = "$title_alt-wum";
-                    $form                    = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "$title_alt-wum";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                 }
@@ -6581,9 +6533,9 @@ sub generate_adjforms {
 
                 #create alternative stems
                 my @title_array = ();
-                my $title_alt   = $mywords[$i]{stem};
+                my $title_alt = $mywords[$i]{stem};
                 push(@title_array, $mywords[$i]{prefix} . "-" . $title_alt);
-                if ($title_alt =~ s/u$/w/)           { push(@title_array, $mywords[$i]{prefix} . "-" . $title_alt); }
+                if ($title_alt =~ s/u$/w/) { push(@title_array, $mywords[$i]{prefix} . "-" . $title_alt); }
                 if ($title_alt =~ s/$vowel_regex$//) { push(@title_array, $mywords[$i]{prefix} . "-" . $title_alt); }
                 if (   $mywords[$i]{adj_paradigm}[0] =~ m/h\x{00E1}lig/
                     && $mywords[$i]{papart} + $mywords[$i]{pspart} == 0)
@@ -6598,25 +6550,25 @@ sub generate_adjforms {
 
   # template :LEMMA | STEM | BT-ID | WORDCLASS | GRADE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
                     %formhash = (
-                        "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                        "BT",     $bt_id,              "wordclass", "adjective",
-                        "class1", "weak",              "paradigm",  "blinda",
+                        "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                        "BT", $bt_id, "wordclass", "adjective",
+                        "class1", "weak", "paradigm", "blinda",
                         "wright", $mywords[$i]{wright}
                     );
                     if ($mywords[$i]{papart} == 1) {
                         %formhash = (
-                            "title",    $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,              "wordclass", "participle",
-                            "class1",   "weak",              "class2",    "past",
-                            "paradigm", "blinda",            "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "weak", "class2", "past",
+                            "paradigm", "blinda", "wright", $mywords[$i]{wright}
                         );
                     }
                     if ($mywords[$i]{pspart} == 1) {
                         %formhash = (
-                            "title",    $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,              "wordclass", "participle",
-                            "class1",   "weak",              "class2",    "present",
-                            "paradigm", "blinda",            "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "weak", "class2", "present",
+                            "paradigm", "blinda", "wright", $mywords[$i]{wright}
                         );
                     }
                     if ($mywords[$i]{pronoun} == 1) { $formhash{"wordclass"} = "pronoun"; }
@@ -6627,232 +6579,232 @@ sub generate_adjforms {
                     #Ma
                     $formhash{"function"} = "PoSgMaNo";
                     my $form_parts = "" . $title_array[$y] . "-a";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoSgMaAc";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoSgMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoSgMaDa";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
                     $formhash{"function"} = "PoSgNeNo";
-                    $form_parts           = "" . $title_array[$y] . "-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoSgNeAc";
-                    $form_parts           = "" . $title_array[$y] . "-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoSgNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoSgNeDa";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
                     $formhash{"function"} = "PoSgFeNo";
-                    $form_parts           = "" . $title_array[$y] . "-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoSgFeAc";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoSgFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoSgFeDa";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
                     $formhash{"function"} = "PoPlMaNo";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlMaAc";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-ra";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-ena";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-ena";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlMaDa";
-                    $form_parts           = "" . $title_array[$y] . "-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
                     $formhash{"function"} = "PoPlNeNo";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlNeAc";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-ra";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-ena";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-ena";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlNeDa";
-                    $form_parts           = "" . $title_array[$y] . "-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
                     $formhash{"function"} = "PoPlFeNo";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlFeAc";
-                    $form_parts           = "" . $title_array[$y] . "-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-ra";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-ena";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-ena";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "PoPlFeDa";
-                    $form_parts           = "" . $title_array[$y] . "-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                 }
@@ -6864,7 +6816,7 @@ sub generate_adjforms {
                 #COMPARATIVE
 
                 @title_array = ();
-                $c           = "0";
+                $c = "0";
 
                 #irregular comparatives
                 if ($mywords[$i]{stem} eq "g\x{00F3}d") {
@@ -6874,7 +6826,7 @@ sub generate_adjforms {
                     push(@title_array, $mywords[$i]{prefix} . "-s\x{00E9}lr");
                     push(@title_array, $mywords[$i]{prefix} . "-selr");
                 }
-                elsif ($mywords[$i]{stem} eq "yfel")  { push(@title_array, $mywords[$i]{prefix} . "-wiers"); }
+                elsif ($mywords[$i]{stem} eq "yfel") { push(@title_array, $mywords[$i]{prefix} . "-wiers"); }
                 elsif ($mywords[$i]{stem} eq "micel") { push(@title_array, $mywords[$i]{prefix} . "-m\x{00E1}r"); }
                 elsif ($mywords[$i]{stem} eq "lytel") { push(@title_array, $mywords[$i]{prefix} . "-l\x{01FD}ss"); }
                 else {
@@ -6906,25 +6858,25 @@ sub generate_adjforms {
 
    # template :LEMMA | STEM | BT-ID | WORDCLASS | TYPE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
                     my %formhash = (
-                        "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                        "BT",     $bt_id,              "wordclass", "adjective",
-                        "class1", "weak",              "paradigm",  "blinda",
+                        "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                        "BT", $bt_id, "wordclass", "adjective",
+                        "class1", "weak", "paradigm", "blinda",
                         "wright", $mywords[$i]{wright}
                     );
                     if ($mywords[$i]{papart} == 1) {
                         %formhash = (
-                            "title",    $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,              "wordclass", "participle",
-                            "class1",   "weak",              "class2",    "past",
-                            "paradigm", "blinda",            "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "weak", "class2", "past",
+                            "paradigm", "blinda", "wright", $mywords[$i]{wright}
                         );
                     }
                     if ($mywords[$i]{pspart} == 1) {
                         %formhash = (
-                            "title",    $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,              "wordclass", "participle",
-                            "class1",   "weak",              "class2",    "present",
-                            "paradigm", "blinda",            "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "weak", "class2", "present",
+                            "paradigm", "blinda", "wright", $mywords[$i]{wright}
                         );
                     }
 
@@ -6934,239 +6886,239 @@ sub generate_adjforms {
                     #Ma
                     $formhash{"function"} = "CoSgMaNo";
                     my $form_parts = "" . $title_array[$y] . "-$c-a";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoSgMaAc";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoSgMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoSgMaDa";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
                     $formhash{"function"} = "CoSgNeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$c-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoSgNeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$c-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoSgNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoSgNeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
                     $formhash{"function"} = "CoSgFeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$c-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoSgFeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoSgFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoSgFeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
                     $formhash{"function"} = "CoPlMaNo";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlMaAc";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-$c-a";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-$c-ena";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-ena";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlMaDa";
-                    $form_parts           = "" . $title_array[$y] . "-$c-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
                     $formhash{"function"} = "CoPlNeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlNeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$c-a";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$c-ena";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-ena";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlNeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$c-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
                     $formhash{"function"} = "CoPlFeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlFeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$c-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$c-a";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$c-ena";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-ena";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "CoPlFeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$c-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$c-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                 }
 
                 #SUPERLATIVE WEAK
                 @title_array = ();
-                $s           = "0";
+                $s = "0";
 
                 #irregular superlatives
                 if ($mywords[$i]{stem} eq "g\x{00F3}d") {
@@ -7206,31 +7158,31 @@ sub generate_adjforms {
 
                 #delete duplicities
 
-                %hash        = map { $_, 1 } @title_array;
+                %hash = map { $_, 1 } @title_array;
                 @title_array = keys %hash;
                 for my $y (0 .. $#title_array) {
 
    # template :LEMMA | STEM | BT-ID | WORDCLASS | TYPE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
                     %formhash = (
-                        "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                        "BT",     $bt_id,              "wordclass", "adjective",
-                        "class1", "weak",              "paradigm",  "blinda",
+                        "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                        "BT", $bt_id, "wordclass", "adjective",
+                        "class1", "weak", "paradigm", "blinda",
                         "wright", $mywords[$i]{wright}
                     );
                     if ($mywords[$i]{papart} == 1) {
                         %formhash = (
-                            "title",    $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,              "wordclass", "participle",
-                            "class1",   "weak",              "class2",    "past",
-                            "paradigm", "blinda",            "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "weak", "class2", "past",
+                            "paradigm", "blinda", "wright", $mywords[$i]{wright}
                         );
                     }
                     if ($mywords[$i]{pspart} == 1) {
                         %formhash = (
-                            "title",    $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,              "wordclass", "participle",
-                            "class1",   "weak",              "class2",    "present",
-                            "paradigm", "blinda",            "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "weak", "class2", "present",
+                            "paradigm", "blinda", "wright", $mywords[$i]{wright}
                         );
                     }
 
@@ -7240,257 +7192,257 @@ sub generate_adjforms {
                     #Ma
                     $formhash{"function"} = "SpSgMaNo";
                     my $form_parts = "" . $title_array[$y] . "-$s-a";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgMaAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgMaDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
                     $formhash{"function"} = "SpSgNeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgNeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgNeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
                     $formhash{"function"} = "SpSgFeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgFeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgFeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
                     $formhash{"function"} = "SpPlMaNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlMaAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-a";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-ena";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-ena";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlMaDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
                     $formhash{"function"} = "SpPlNeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlNeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-a";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-ena";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-ena";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlNeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
                     $formhash{"function"} = "SpPlFeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-an";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-an";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-a";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-ena";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-ena";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
-   #SUPERLATIVE STRONG
+                    #SUPERLATIVE STRONG
    # template :LEMMA | STEM | BT-ID | WORDCLASS | TYPE | CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT | VARIANT-ID
                     %formhash = (
-                        "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                        "BT",     $bt_id,              "wordclass", "adjective",
-                        "class1", "strong",            "paradigm",  $mywords[$i]{adj_paradigm}[0],
+                        "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                        "BT", $bt_id, "wordclass", "adjective",
+                        "class1", "strong", "paradigm", $mywords[$i]{adj_paradigm}[0],
                         "wright", $mywords[$i]{wright}
                     );
                     if ($mywords[$i]{papart} == 1) {
                         %formhash = (
-                            "title",    $mywords[$i]{title},           "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,                        "wordclass", "participle",
-                            "class1",   "strong",                      "class2",    "past",
-                            "paradigm", $mywords[$i]{adj_paradigm}[0], "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "strong", "class2", "past",
+                            "paradigm", $mywords[$i]{adj_paradigm}[0], "wright", $mywords[$i]{wright}
                         );
                     }
                     if ($mywords[$i]{pspart} == 1) {
                         %formhash = (
-                            "title",    $mywords[$i]{title},           "stem",      $mywords[$i]{stem},
-                            "BT",       $bt_id,                        "wordclass", "participle",
-                            "class1",   "strong",                      "class2",    "present",
-                            "paradigm", $mywords[$i]{adj_paradigm}[0], "wright",    $mywords[$i]{wright}
+                            "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                            "BT", $bt_id, "wordclass", "participle",
+                            "class1", "strong", "class2", "present",
+                            "paradigm", $mywords[$i]{adj_paradigm}[0], "wright", $mywords[$i]{wright}
                         );
                     }
 
@@ -7498,349 +7450,349 @@ sub generate_adjforms {
                     #Ma
                     $formhash{"function"} = "SpSgMaNo";
                     my $form_parts = "" . $title_array[$y] . "-$s-0";
-                    my $form       = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    my $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgMaAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-ne";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-ne";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgMaAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-es";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgMaDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgMaDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
 
                     #Ne
                     $formhash{"function"} = "SpSgNeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgNeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-es";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-es";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgNeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgNeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
 
                     #Fe
                     $formhash{"function"} = "SpSgFeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgFeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-re";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgFeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-re";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-re";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpSgFeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
 
                     #Pl
                     #Ma
                     $formhash{"function"} = "SpPlMaNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlMaNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlMaAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlMaAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-ra";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlMaGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlMaDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Ne
                     $formhash{"function"} = "SpPlNeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlNeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlNeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlNeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-ra";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlNeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 2;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlNeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
 
                     #Fe
                     $formhash{"function"} = "SpPlFeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-a";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeNo";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 2;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-a";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-a";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-e";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-e";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 1;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeAc";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 2;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-ra";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-ra";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeGe";
-                    $form_parts           = "" . $title_array[$y] . "-$s-0";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-0";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}        = $form;
-                    $formhash{"formParts"}   = $form_parts;
+                    $formhash{"form"} = $form;
+                    $formhash{"formParts"} = $form_parts;
                     $formhash{"probability"} = $probability + 2;
                     push(@forms, {%formhash});
                     $formhash{"function"} = "SpPlFeDa";
-                    $form_parts           = "" . $title_array[$y] . "-$s-um";
-                    $form                 = $form_parts;
-                    $form       =~ s/[0\-\n]//g;
+                    $form_parts = "" . $title_array[$y] . "-$s-um";
+                    $form = $form_parts;
+                    $form =~ s/[0\-\n]//g;
                     $form_parts =~ s/[\n]//g;
-                    $formhash{"form"}      = $form;
+                    $formhash{"form"} = $form;
                     $formhash{"formParts"} = $form_parts;
                     push(@forms, {%formhash});
                 }
@@ -7861,19 +7813,19 @@ sub generate_advforms {
 
             # template
             %formhash = (
-                "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                "BT",     $bt_id,              "wordclass", "adverb",
+                "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                "BT", $bt_id, "wordclass", "adverb",
                 "wright", $mywords[$i]{wright}
             );
 
             #positive
-            $formhash{"function"}    = "Po";
+            $formhash{"function"} = "Po";
             $formhash{"probability"} = "0";
-            $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
+            $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-0";
             my $form = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
 
@@ -7889,31 +7841,31 @@ sub generate_advforms {
             else {
                 $mywords[$i]{stem} =~ s/e$//i;
 
-                $formhash{"function"}    = "Co";
+                $formhash{"function"} = "Co";
                 $formhash{"probability"} = "0";
-                $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-or";
-                $form                    = $form_parts;
-                $form       =~ s/[0\-\n]//g;
+                $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-or";
+                $form = $form_parts;
+                $form =~ s/[0\-\n]//g;
                 $form_parts =~ s/[\n]//g;
-                $formhash{"form"}      = $form;
+                $formhash{"form"} = $form;
                 $formhash{"formParts"} = $form_parts;
                 push(@forms, {%formhash});
-                $formhash{"function"}    = "Co";
+                $formhash{"function"} = "Co";
                 $formhash{"probability"} = "1";
-                $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ur";
-                $form                    = $form_parts;
-                $form       =~ s/[0\-\n]//g;
+                $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ur";
+                $form = $form_parts;
+                $form =~ s/[0\-\n]//g;
                 $form_parts =~ s/[\n]//g;
-                $formhash{"form"}      = $form;
+                $formhash{"form"} = $form;
                 $formhash{"formParts"} = $form_parts;
                 push(@forms, {%formhash});
-                $formhash{"function"}    = "Co";
+                $formhash{"function"} = "Co";
                 $formhash{"probability"} = "2";
-                $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ar";
-                $form                    = $form_parts;
-                $form       =~ s/[0\-\n]//g;
+                $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ar";
+                $form = $form_parts;
+                $form =~ s/[0\-\n]//g;
                 $form_parts =~ s/[\n]//g;
-                $formhash{"form"}      = $form;
+                $formhash{"form"} = $form;
                 $formhash{"formParts"} = $form_parts;
                 push(@forms, {%formhash});
             }
@@ -7932,40 +7884,40 @@ sub generate_advforms {
             elsif ($mywords[$i]{stem} eq "micle") { push(@title_array, $mywords[$i]{prefix} . "-m\x{01FD}st"); }
             elsif ($mywords[$i]{stem} eq "lytel") { push(@title_array, $mywords[$i]{prefix} . "-l\x{01FD}st"); }
             else {
-                $formhash{"function"}    = "Su";
+                $formhash{"function"} = "Su";
                 $formhash{"probability"} = "0";
-                $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ost";
-                $form                    = $form_parts;
-                $form       =~ s/[0\-\n]//g;
+                $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ost";
+                $form = $form_parts;
+                $form =~ s/[0\-\n]//g;
                 $form_parts =~ s/[\n]//g;
-                $formhash{"form"}      = $form;
+                $formhash{"form"} = $form;
                 $formhash{"formParts"} = $form_parts;
                 push(@forms, {%formhash});
-                $formhash{"function"}    = "Su";
+                $formhash{"function"} = "Su";
                 $formhash{"probability"} = "1";
-                $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ust";
-                $form                    = $form_parts;
-                $form       =~ s/[0\-\n]//g;
+                $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ust";
+                $form = $form_parts;
+                $form =~ s/[0\-\n]//g;
                 $form_parts =~ s/[\n]//g;
-                $formhash{"form"}      = $form;
+                $formhash{"form"} = $form;
                 $formhash{"formParts"} = $form_parts;
                 push(@forms, {%formhash});
-                $formhash{"function"}    = "Su";
+                $formhash{"function"} = "Su";
                 $formhash{"probability"} = "2";
-                $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ast";
-                $form                    = $form_parts;
-                $form       =~ s/[0\-\n]//g;
+                $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-ast";
+                $form = $form_parts;
+                $form =~ s/[0\-\n]//g;
                 $form_parts =~ s/[\n]//g;
-                $formhash{"form"}      = $form;
+                $formhash{"form"} = $form;
                 $formhash{"formParts"} = $form_parts;
                 push(@forms, {%formhash});
-                $formhash{"function"}    = "Su";
+                $formhash{"function"} = "Su";
                 $formhash{"probability"} = "2";
-                $form_parts              = "$mywords[$i]{prefix}-$mywords[$i]{stem}-st";
-                $form                    = $form_parts;
-                $form       =~ s/[0\-\n]//g;
+                $form_parts = "$mywords[$i]{prefix}-$mywords[$i]{stem}-st";
+                $form = $form_parts;
+                $form =~ s/[0\-\n]//g;
                 $form_parts =~ s/[\n]//g;
-                $formhash{"form"}      = $form;
+                $formhash{"form"} = $form;
                 $formhash{"formParts"} = $form_parts;
                 push(@forms, {%formhash});
             }
@@ -7987,9 +7939,9 @@ sub generate_numforms {
             if ($mywords[$i]{noun} == 1) {
 
                 %formhash = (
-                    "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                    "BT",     $bt_id,              "wordclass", "numeral",
-                    "class1", "strong",            "wright",    $mywords[$i]{wright}
+                    "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                    "BT", $bt_id, "wordclass", "numeral",
+                    "class1", "strong", "wright", $mywords[$i]{wright}
                 );
 
                 #Masculine
@@ -8001,9 +7953,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8013,9 +7965,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8023,9 +7975,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8035,9 +7987,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8047,9 +7999,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8057,9 +8009,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8072,9 +8024,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -8088,9 +8040,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -8106,9 +8058,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8118,9 +8070,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8128,9 +8080,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8140,9 +8092,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8153,9 +8105,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8163,9 +8115,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-e";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8178,9 +8130,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -8194,9 +8146,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -8212,9 +8164,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8224,9 +8176,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8234,9 +8186,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8244,9 +8196,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8256,9 +8208,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8269,9 +8221,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-0";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8279,9 +8231,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-u";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8289,9 +8241,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-o";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                     }
@@ -8304,9 +8256,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-a";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -8320,9 +8272,9 @@ sub generate_numforms {
                 for my $i3 (0 .. $#stem) {
                     if ($stem[$i3]) {
                         $form_parts = "$mywords[$i]{prefix}-$stem[$i3]-um";
-                        $form       = $form_parts;
+                        $form = $form_parts;
                         $form =~ s/[0\-\n]//g;
-                        $formhash{"form"}      = $form;
+                        $formhash{"form"} = $form;
                         $formhash{"formParts"} = $form_parts;
                         push(@forms, {%formhash});
                         $stem[$i3] = 0;
@@ -8333,9 +8285,9 @@ sub generate_numforms {
             #CARDINALS AND ORDINALS AS ADJECTIVES
 
             %formhash = (
-                "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                "BT",     $bt_id,              "wordclass", "numeral",
-                "class1", "weak",              "paradigm",  "blinda",
+                "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                "BT", $bt_id, "wordclass", "numeral",
+                "class1", "weak", "paradigm", "blinda",
                 "wright", $mywords[$i]{wright}
             );
             my $alt_title = $mywords[$i]{prefix} . "-" . $mywords[$i]{stem};
@@ -8344,130 +8296,130 @@ sub generate_numforms {
             #Pl
             #Ma
             $formhash{"function"} = "PoPlMaNo";
-            $form_parts           = "" . $alt_title . "-an";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-an";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlMaAc";
-            $form_parts           = "" . $alt_title . "-an";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-an";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlMaGe";
-            $form_parts           = "" . $alt_title . "-ra";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-ra";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlMaGe";
-            $form_parts           = "" . $alt_title . "-ena";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-ena";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}        = $form;
-            $formhash{"formParts"}   = $form_parts;
+            $formhash{"form"} = $form;
+            $formhash{"formParts"} = $form_parts;
             $formhash{"probability"} = $probability + 1;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlMaDa";
-            $form_parts           = "" . $alt_title . "-um";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-um";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
 
             #Ne
             $formhash{"function"} = "PoPlNeNo";
-            $form_parts           = "" . $alt_title . "-an";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-an";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlNeAc";
-            $form_parts           = "" . $alt_title . "-an";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-an";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlNeGe";
-            $form_parts           = "" . $alt_title . "-ra";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-ra";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlNeGe";
-            $form_parts           = "" . $alt_title . "-ena";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-ena";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}        = $form;
-            $formhash{"formParts"}   = $form_parts;
+            $formhash{"form"} = $form;
+            $formhash{"formParts"} = $form_parts;
             $formhash{"probability"} = $probability + 1;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlNeDa";
-            $form_parts           = "" . $alt_title . "-um";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-um";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
 
             #Fe
             $formhash{"function"} = "PoPlFeNo";
-            $form_parts           = "" . $alt_title . "-an";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-an";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlFeAc";
-            $form_parts           = "" . $alt_title . "-an";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-an";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlFeGe";
-            $form_parts           = "" . $alt_title . "-ra";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-ra";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlFeGe";
-            $form_parts           = "" . $alt_title . "-ena";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-ena";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}        = $form;
-            $formhash{"formParts"}   = $form_parts;
+            $formhash{"form"} = $form;
+            $formhash{"formParts"} = $form_parts;
             $formhash{"probability"} = $probability + 1;
             push(@forms, {%formhash});
             $formhash{"function"} = "PoPlFeDa";
-            $form_parts           = "" . $alt_title . "-um";
-            $form                 = $form_parts;
-            $form       =~ s/[0\-\n]//g;
+            $form_parts = "" . $alt_title . "-um";
+            $form = $form_parts;
+            $form =~ s/[0\-\n]//g;
             $form_parts =~ s/[\n]//g;
-            $formhash{"form"}      = $form;
+            $formhash{"form"} = $form;
             $formhash{"formParts"} = $form_parts;
             push(@forms, {%formhash});
 
@@ -8486,29 +8438,29 @@ sub generate_vbforms {
     for my $i (0 .. $#mywords) {
         foreach (@{ $mywords[$i]{vb_paradigm} }) {
             my $probability;
-            my $type     = $_->{type};
-            my $class    = $_->{class};
+            my $type = $_->{type};
+            my $class = $_->{class};
             my $subclass = $_->{subclass};
-            my $title    = $_->{title};
-            my $ID       = $_->{ID};
-            my $wright   = $_->{wright};
-            my $bt_id    = sprintf("%06d", $mywords[$i]{nid});
+            my $title = $_->{title};
+            my $ID = $_->{ID};
+            my $wright = $_->{wright};
+            my $bt_id = sprintf("%06d", $mywords[$i]{nid});
 
 # output template for all verbs:LEMMA | STEM | BT-ID | WORDCLASS | VERB-TYPE | VERB-CLASS | SUBCLASS | PARADIGM | PARADIGM-ID | WRIGHT |
             my $form_template_header =
               "$mywords[$i]{title}\t$mywords[$i]{stem}\t$bt_id\tverb\t$type\t$class\t$subclass\t$title\t$ID\t$wright\t";
             %formhash = (
-                "title",  $mywords[$i]{title}, "stem",      $mywords[$i]{stem},
-                "BT",     $bt_id,              "wordclass", "verb",
-                "class1", $type,               "class2",    $class,
-                "class3", $subclass,           "paradigm",  $title,
-                "paraID", $ID,                 "wright",    $mywords[$i]{wright}
+                "title", $mywords[$i]{title}, "stem", $mywords[$i]{stem},
+                "BT", $bt_id, "wordclass", "verb",
+                "class1", $type, "class2", $class,
+                "class3", $subclass, "paradigm", $title,
+                "paraID", $ID, "wright", $mywords[$i]{wright}
             );
 
             #we will need the boundary of the infinitive of the 0 variant for determining post-vowel
             my $boundary_inf = $_->{variant}[0]{if}{boundary};
-            my $vowel_inf    = $_->{variant}[0]{if}{vowel};
-            my $vowel_pa     = $_->{variant}[0]{painsg1}{vowel};
+            my $vowel_inf = $_->{variant}[0]{if}{vowel};
+            my $vowel_pa = $_->{variant}[0]{painsg1}{vowel};
 
             #CYCLE VARIANTS
             foreach (@{ $_->{variant} }) {
@@ -8524,17 +8476,10 @@ sub generate_vbforms {
 
                         #IF A VERB HAS A PREFIX, IT WILL RUN TWICE, ONCE WITH IT, ONCE WITHOUT
                         my $prefix_count;
-
-                        #			if ($mywords[$i]{prefix}) {$prefix_count=2;} else {$prefix_count=1; }
-                        #			while ($prefix_count>0) {$prefix_count--;
-                        my $prefix = "";
-
-                        #				if ($prefix_count==1) {$prefix=$mywords[$i]{prefix};}
-                        #				my $probability = $prefix_count;
-                        $prefix = $mywords[$i]{prefix};
+                        my $prefix = $mywords[$i]{prefix};
                         if ($prefix ne $item->{prefix}) { $prefix = $prefix . "-" . $item->{prefix}; }
-                        my $paraID   = $item->{paraID};
-                        my $ending   = $item->{ending};
+                        my $paraID = $item->{paraID};
+                        my $ending = $item->{ending};
                         my $boundary = $item->{boundary};
                         my $post_vowel;
 
@@ -8573,7 +8518,7 @@ sub generate_vbforms {
 
                             #remove empty vowel elements from the array
                             @full_vowel = map { $_ ? $_ : () } @vowel;
-                            @vowel      = @full_vowel;
+                            @vowel = @full_vowel;
 
                             for my $vcount (0 .. $#vowel) {
 
@@ -8583,11 +8528,11 @@ sub generate_vbforms {
 
 # first output all parts of the paradigm that are defined in the paradigm dictionary (mostly the principal parts)  TEMPLATE + PROBABILITY | FORMPARTS | FORM
                                 my $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$ending";
-                                my $form       = $form_parts;
-                                $form       =~ s/[0\-\n]//g;
+                                my $form = $form_parts;
+                                $form =~ s/[0\-\n]//g;
                                 $form_parts =~ s/[\n]//g;
-                                $formhash{"form"}        = $form;
-                                $formhash{"formParts"}   = $form_parts;
+                                $formhash{"form"} = $form;
+                                $formhash{"formParts"} = $form_parts;
                                 $formhash{"probability"} = $probability;
                                 push(@forms, {%formhash});
 
@@ -8595,12 +8540,12 @@ sub generate_vbforms {
                                 if (($paraID =~ m/^PaPt$/i) && ($prefix == $mywords[$i]{prefix})) {
                                     my $adjsize = $#adjectives + 1;
                                     $adjectives[$adjsize]{prefix} = $prefix;
-                                    $adjectives[$adjsize]{stem}   = $form_parts;
-                                    $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
+                                    $adjectives[$adjsize]{stem} = $form_parts;
+                                    $adjectives[$adjsize]{stem} = $1 if $form_parts =~ m/$prefix(.*)$/;
                                     $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
                                     $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
                                     $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
+                                    $adjectives[$adjsize]{nid} = $mywords[$i]{nid};
                                     $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
                                     $adjectives[$adjsize]{papart} = 1;
                                 }
@@ -8608,21 +8553,21 @@ sub generate_vbforms {
                                 # from Inf we generate: ii, PsPa, PsInSg1, PsInPl, PsSuSg, PsSuPl, ImpSg, ImpPl
                                 if ($paraID =~ m/^if$/i) {
 
-                                    #ii	 -anne, -enne; -nne
+                                    #ii  -anne, -enne; -nne
                                     if ($ending =~ m/an/) {
                                         $formhash{"function"} = "IdIf";
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-anne";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-enne";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
 
@@ -8630,10 +8575,10 @@ sub generate_vbforms {
                                     else {
                                         $formhash{"function"} = "IdIf";
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-nne";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -8642,20 +8587,20 @@ sub generate_vbforms {
                                     if ($ending =~ m/an/) {
                                         $formhash{"function"} = "PsPt";
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-ende";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
                                     else {
                                         $formhash{"function"} = "PsPt";
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-nde";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -8664,12 +8609,12 @@ sub generate_vbforms {
                                     if ($prefix == $mywords[$i]{prefix}) {
                                         my $adjsize = $#adjectives + 1;
                                         $adjectives[$adjsize]{prefix} = $prefix;
-                                        $adjectives[$adjsize]{stem}   = $form_parts;
-                                        $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
+                                        $adjectives[$adjsize]{stem} = $form_parts;
+                                        $adjectives[$adjsize]{stem} = $1 if $form_parts =~ m/$prefix(.*)$/;
                                         $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
                                         $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
                                         $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                        $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
+                                        $adjectives[$adjsize]{nid} = $mywords[$i]{nid};
                                         $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
                                         $adjectives[$adjsize]{pspart} = 1;
                                     }
@@ -8678,42 +8623,42 @@ sub generate_vbforms {
                                     if ($ending =~ m/an/) {
                                         $formhash{"function"} = "PsInSg1";
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-e";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-u";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-o";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $form_parts =
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-\x{00E6}";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                     }
                                     else {
                                         $formhash{"function"} = "PsInSg1";
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-0";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -8725,30 +8670,30 @@ sub generate_vbforms {
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-a\x{00FE}";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                         $form_parts =
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-e\x{00FE}";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-es";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-as";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                     }
@@ -8758,8 +8703,8 @@ sub generate_vbforms {
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-\x{00FE}";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -8768,20 +8713,20 @@ sub generate_vbforms {
                                     if ($ending =~ m/an/) {
                                         $formhash{"function"} = "PsSuSg";
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-e";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
                                     else {
                                         $formhash{"function"} = "PsSuSg";
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-0";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -8790,20 +8735,20 @@ sub generate_vbforms {
                                     if ($ending =~ m/an/) {
                                         $formhash{"function"} = "PsSuPl";
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-en";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
                                     else {
                                         $formhash{"function"} = "PsSuPl";
                                         $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-n";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -8811,10 +8756,10 @@ sub generate_vbforms {
                                     #ImpSg -0
                                     $formhash{"function"} = "ImSg";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-0";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
@@ -8825,8 +8770,8 @@ sub generate_vbforms {
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-a\x{00FE}";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -8836,8 +8781,8 @@ sub generate_vbforms {
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-\x{00FE}";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -8846,50 +8791,50 @@ sub generate_vbforms {
                                     my @mvowels = &iumlaut($vowel[$vcount]);
                                     for (my $mvowel_count = 0 ; $mvowel_count < @mvowels ; $mvowel_count++) {
                                         $probability = $prefix_count + $mvowel_count;
-                                        $mvowel      = $mvowels[$mvowel_count];
+                                        $mvowel = $mvowels[$mvowel_count];
 
                                         #PsInSg2 -st, -stu, -est, -ist, -s
                                         $formhash{"function"} = "PsInSg2";
-                                        $form_parts           = "$prefix-$pre_vowel-$mvowel-$post_vowel-$boundary-stu";
-                                        $form                 = $form_parts;
+                                        $form_parts = "$prefix-$pre_vowel-$mvowel-$post_vowel-$boundary-stu";
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$mvowel-$post_vowel-$boundary-est";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$mvowel-$post_vowel-$boundary-ist";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$mvowel-$post_vowel-$boundary-s";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$mvowel-$post_vowel-$boundary-st";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
 
                                         #dst > tst
                                         if ($form =~ s/dst$/tst/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -8897,8 +8842,8 @@ sub generate_vbforms {
 
                                         #þst > tst
                                         if ($form =~ s/\x{00FE}st$/tst/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -8906,8 +8851,8 @@ sub generate_vbforms {
 
                                         #tst > st
                                         if ($form =~ s/tst$/st/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -8915,8 +8860,8 @@ sub generate_vbforms {
 
                                         #ngst > ncst
                                         if ($form =~ s/ngst$/ncst/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -8924,8 +8869,8 @@ sub generate_vbforms {
 
                                         #ncst > nst
                                         if ($form =~ s/ncst$/nst/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -8933,8 +8878,8 @@ sub generate_vbforms {
 
                                         #gst > hst
                                         if ($form =~ s/gst$/hst/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -8942,8 +8887,8 @@ sub generate_vbforms {
 
                                         #hst > xst
                                         if ($form =~ s/hst$/xst/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -8952,31 +8897,31 @@ sub generate_vbforms {
                                         #PsInSg3 -eþ, -iþ, -þ
                                         $formhash{"function"} = "PsInSg3";
                                         $form_parts = "$prefix-$pre_vowel-$mvowel-$post_vowel-$boundary-e\x{00FE}";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$mvowel-$post_vowel-$boundary-i\x{00FE}";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $form_parts = "$prefix-$pre_vowel-$mvowel-$post_vowel-$boundary-\x{00FE}";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
 
                                         #tþ,dþ > tt
                                         if ($form =~ s/[td]\x{00FE}$/tt/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -8984,8 +8929,8 @@ sub generate_vbforms {
 
                                         #tt,dt > t
                                         if ($form =~ s/[dt]t$/t/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -8993,8 +8938,8 @@ sub generate_vbforms {
 
                                         #þþ > þ
                                         if ($form =~ s/\x{00FE}\x{00FE}$/\x{00FE}/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -9002,8 +8947,8 @@ sub generate_vbforms {
 
                                         #þ > t
                                         if ($form =~ s/\x{00FE}$/t/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -9011,8 +8956,8 @@ sub generate_vbforms {
 
                                         #sþ > st
                                         if ($form =~ s/s\x{00FE}$/st/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -9020,8 +8965,8 @@ sub generate_vbforms {
 
                                         #ngþ > ncþ
                                         if ($form =~ s/ng\x{00FE}$/nc\x{00FE}/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -9029,8 +8974,8 @@ sub generate_vbforms {
 
                                         #gþ > hþ
                                         if ($form =~ s/g\x{00FE}$/h\x{00FE}/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -9045,10 +8990,10 @@ sub generate_vbforms {
                                     #PaInSg3
                                     $formhash{"function"} = "PaInSg3";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-0";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
                                 }
@@ -9059,30 +9004,30 @@ sub generate_vbforms {
                                     #PaInSg2 -e
                                     $formhash{"function"} = "PaInSg2";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-e";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
                                     #PaSuSg -e
                                     $formhash{"function"} = "PaSuSg";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-e";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
                                     #PaSuPl -en
                                     $formhash{"function"} = "PaSuPl";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-en";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
                                 }
@@ -9105,21 +9050,21 @@ sub generate_vbforms {
 
                             # class 3 is manually defined
                             if (($ID > 88) && ($ID < 93)) {
-                                my $vowel       = $item->{vowel};
-                                my $boundary    = $item->{boundary};
-                                my $dental      = $item->{dental};
-                                my $ending      = $item->{ending};
-                                my $post_vowel  = $item->{postVowel};
-                                my $pre_vowel   = $item->{preVowel};
+                                my $vowel = $item->{vowel};
+                                my $boundary = $item->{boundary};
+                                my $dental = $item->{dental};
+                                my $ending = $item->{ending};
+                                my $post_vowel = $item->{postVowel};
+                                my $pre_vowel = $item->{preVowel};
                                 my $form_header = $form_template_header . "$item->{paraID}";
                                 $formhash{"function"} = $paraID;
                                 my $probability = $prefix_count;
-                                my $form_parts  = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-$dental-$ending";
-                                my $form        = $form_parts;
-                                $form       =~ s/[0\-\n]//g;
+                                my $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-$dental-$ending";
+                                my $form = $form_parts;
+                                $form =~ s/[0\-\n]//g;
                                 $form_parts =~ s/[\n]//g;
-                                $formhash{"form"}        = $form;
-                                $formhash{"formParts"}   = $form_parts;
+                                $formhash{"form"} = $form;
+                                $formhash{"formParts"} = $form_parts;
                                 $formhash{"probability"} = $probability;
                                 push(@forms, {%formhash});
 
@@ -9127,12 +9072,12 @@ sub generate_vbforms {
                                 if (($paraID =~ m/^PsPt$/i) && ($prefix == $mywords[$i]{prefix})) {
                                     my $adjsize = $#adjectives + 1;
                                     $adjectives[$adjsize]{prefix} = $prefix;
-                                    $adjectives[$adjsize]{stem}   = $form_parts;
-                                    $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
+                                    $adjectives[$adjsize]{stem} = $form_parts;
+                                    $adjectives[$adjsize]{stem} = $1 if $form_parts =~ m/$prefix(.*)$/;
                                     $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
                                     $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
                                     $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
+                                    $adjectives[$adjsize]{nid} = $mywords[$i]{nid};
                                     $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
                                     $adjectives[$adjsize]{pspart} = 1;
                                 }
@@ -9141,12 +9086,12 @@ sub generate_vbforms {
                                 if (($paraID =~ m/^PaPt$/i) && ($prefix == $mywords[$i]{prefix})) {
                                     my $adjsize = $#adjectives + 1;
                                     $adjectives[$adjsize]{prefix} = $prefix;
-                                    $adjectives[$adjsize]{stem}   = $form_parts;
-                                    $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
+                                    $adjectives[$adjsize]{stem} = $form_parts;
+                                    $adjectives[$adjsize]{stem} = $1 if $form_parts =~ m/$prefix(.*)$/;
                                     $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
                                     $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
                                     $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
+                                    $adjectives[$adjsize]{nid} = $mywords[$i]{nid};
                                     $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
                                     $adjectives[$adjsize]{papart} = 1;
                                 }
@@ -9157,10 +9102,10 @@ sub generate_vbforms {
                                 $form_parts =
                                   "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental-$ending";
                                 $form = $form_parts;
-                                $form       =~ s/[0\-\n]//g;
+                                $form =~ s/[0\-\n]//g;
                                 $form_parts =~ s/[\n]//g;
-                                $formhash{"form"}        = $form;
-                                $formhash{"formParts"}   = $form_parts;
+                                $formhash{"form"} = $form;
+                                $formhash{"formParts"} = $form_parts;
                                 $formhash{"probability"} = $probability;
                                 push(@forms, {%formhash});
 
@@ -9168,12 +9113,12 @@ sub generate_vbforms {
                                 if (($paraID =~ m/^PsPt$/i) && ($prefix == $mywords[$i]{prefix})) {
                                     my $adjsize = $#adjectives + 1;
                                     $adjectives[$adjsize]{prefix} = $prefix;
-                                    $adjectives[$adjsize]{stem}   = $form_parts;
-                                    $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
+                                    $adjectives[$adjsize]{stem} = $form_parts;
+                                    $adjectives[$adjsize]{stem} = $1 if $form_parts =~ m/$prefix(.*)$/;
                                     $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
                                     $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
                                     $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
+                                    $adjectives[$adjsize]{nid} = $mywords[$i]{nid};
                                     $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
                                     $adjectives[$adjsize]{pspart} = 1;
                                 }
@@ -9182,12 +9127,12 @@ sub generate_vbforms {
                                 if (($paraID =~ m/^PaPt$/i) && ($prefix == $mywords[$i]{prefix})) {
                                     my $adjsize = $#adjectives + 1;
                                     $adjectives[$adjsize]{prefix} = $prefix;
-                                    $adjectives[$adjsize]{stem}   = $form_parts;
-                                    $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
+                                    $adjectives[$adjsize]{stem} = $form_parts;
+                                    $adjectives[$adjsize]{stem} = $1 if $form_parts =~ m/$prefix(.*)$/;
                                     $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
                                     $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
                                     $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                    $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
+                                    $adjectives[$adjsize]{nid} = $mywords[$i]{nid};
                                     $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
                                     $adjectives[$adjsize]{papart} = 1;
                                 }
@@ -9198,15 +9143,15 @@ sub generate_vbforms {
                                     if ($ending =~ m/^i/i) { $iending = "i"; }
 
                                     #Inf -an/-ian
-                                    $inf_ending   = $ending;
+                                    $inf_ending = $ending;
                                     $inf_boundary = $item->{boundary};
 
                                     $formhash{"function"} = "if";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$ending";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
@@ -9216,10 +9161,10 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                       )
                                     {
                                         $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-n";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -9227,17 +9172,17 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                     #ii -anne, -enne; -nne
                                     $formhash{"function"} = "IdIf";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-anne";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-enne";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
@@ -9246,10 +9191,10 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                       )
                                     {
                                         $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-nne";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -9257,32 +9202,32 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                     #PsInSg1 -e, -u, -o, -æ;
                                     $formhash{"function"} = "PsInSg1";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-e";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-u";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-o";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts =
                                       "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-\x{00E6}";
                                     $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
 
@@ -9291,10 +9236,10 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                       )
                                     {
                                         $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-0";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -9305,30 +9250,30 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                       "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-a\x{00FE}";
                                     $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
                                     $form_parts =
                                       "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-e\x{00FE}";
                                     $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-es";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-as";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
 
@@ -9340,8 +9285,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                           "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-\x{00FE}";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -9349,10 +9294,10 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                     #PsSuSg -e
                                     $formhash{"function"} = "PsSuSg";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-e";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
@@ -9361,10 +9306,10 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                       )
                                     {
                                         $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-0";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -9372,19 +9317,19 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                     #PsSuPl -en
                                     $formhash{"function"} = "PsSuPl";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-en";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
                                     if ("$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary" =~ m/$vowel_regex$/) {
                                         $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-n";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -9395,8 +9340,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                       "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-a\x{00FE}";
                                     $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
@@ -9405,10 +9350,10 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                       )
                                     {
                                         $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-\x{00FE}";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -9416,10 +9361,10 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                     #PsPa -ende
                                     $formhash{"function"} = "PsPt";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-ende";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
@@ -9428,10 +9373,10 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                       )
                                     {
                                         $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-$iending-nde";
-                                        $form       = $form_parts;
+                                        $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                     }
@@ -9440,12 +9385,12 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                     if ($prefix == $mywords[$i]{prefix}) {
                                         my $adjsize = $#adjectives + 1;
                                         $adjectives[$adjsize]{prefix} = $prefix;
-                                        $adjectives[$adjsize]{stem}   = $form_parts;
-                                        $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
+                                        $adjectives[$adjsize]{stem} = $form_parts;
+                                        $adjectives[$adjsize]{stem} = $1 if $form_parts =~ m/$prefix(.*)$/;
                                         $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
                                         $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
                                         $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                        $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
+                                        $adjectives[$adjsize]{nid} = $mywords[$i]{nid};
                                         $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
                                         $adjectives[$adjsize]{pspart} = 1;
                                     }
@@ -9463,45 +9408,45 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #if ($item->{postVowel} ne $inf_post_vowel) {$post_vowel =~ s/(.).$/$1/;}
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-est";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-es";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-ist";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-s";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-st";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
                                     #dst > tst
                                     if ($form =~ s/dst$/tst/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9509,8 +9454,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #þst > tst
                                     if ($form =~ s/\x{00FE}st$/tst/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9518,8 +9463,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #tst > st
                                     if ($form =~ s/tst$/st/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9527,8 +9472,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #ngst > ncst
                                     if ($form =~ s/ngst$/ncst/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9536,8 +9481,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #ncst > nst
                                     if ($form =~ s/ncst$/nst/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9545,8 +9490,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #gst > hst
                                     if ($form =~ s/gst$/hst/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9554,8 +9499,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #hst > xst
                                     if ($form =~ s/hst$/xst/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9564,38 +9509,38 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                         #PsInSg3 -eþ, -ieþ, -iþ, -þ (sealfian and those manually defined have -aþ in the para dict)
                                     $formhash{"function"} = "PsInSg3";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-e\x{00FE}";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-ie\x{00FE}";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-i\x{00FE}";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-\x{00FE}";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
 
                                     #tþ,dþ > tt
                                     if ($form =~ s/[td]\x{00FE}$/tt/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9603,8 +9548,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #tt > t
                                     if ($form =~ s/tt$/t/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9612,8 +9557,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #þþ > þ
                                     if ($form =~ s/\x{00FE}\x{00FE}$/\x{00FE}/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9621,8 +9566,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #þ > t
                                     if ($form =~ s/\x{00FE}$/t/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9630,8 +9575,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #sþ > st
                                     if ($form =~ s/s\x{00FE}$/st/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9639,8 +9584,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #ngþ > ncþ
                                     if ($form =~ s/ng\x{00FE}$/nc\x{00FE}/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9648,8 +9593,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #gþ > hþ
                                     if ($form =~ s/g\x{00FE}$/h\x{00FE}/g) {
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
                                         $count++;
@@ -9657,25 +9602,25 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #ImpSg -e;-0 (sealfian and those manually defined have -a in the para dict)
                                     $formhash{"function"} = "ImSg";
-                                    $form_parts           = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-e";
-                                    $form                 = $form_parts;
+                                    $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-e";
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-ie";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-0";
-                                    $form       = $form_parts;
+                                    $form = $form_parts;
                                     $form =~ s/[0\-]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
@@ -9699,8 +9644,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental-e";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
 
@@ -9710,16 +9655,16 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental-est";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
                                         $form_parts =
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental-es";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability + 1;
                                         push(@forms, {%formhash});
 
@@ -9729,8 +9674,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental-e";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
 
@@ -9740,8 +9685,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental-on";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
 
@@ -9751,8 +9696,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental-e";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
 
@@ -9762,8 +9707,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental-en";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
 
@@ -9773,17 +9718,17 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                           "$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental";
                                         $form = $form_parts;
                                         $form =~ s/[0\-]//g;
-                                        $formhash{"form"}        = $form;
-                                        $formhash{"formParts"}   = $form_parts;
+                                        $formhash{"form"} = $form;
+                                        $formhash{"formParts"} = $form_parts;
                                         $formhash{"probability"} = $probability;
                                         push(@forms, {%formhash});
 
-#$form_parts = "ge-$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental";
+                                   #$form_parts = "ge-$prefix-$pre_vowel-$vowel[$vcount]-$post_vowel-$boundary-$dental";
 #$form = $form_parts; $form =~ s/[0\-]//g; $formhash{"form"}=$form; $formhash{"formParts"}=$form_parts; $formhash{"probability"}=$probability+1; push (@forms, {%formhash});
-#t-ed > t-t
+                                        #t-ed > t-t
                                         if ($form =~ s/ted$/tt/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -9791,8 +9736,8 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                         #t-t > t
                                         if ($form =~ s/tt$/t/g) {
-                                            $formhash{"form"}        = $form;
-                                            $formhash{"formParts"}   = $form_parts;
+                                            $formhash{"form"} = $form;
+                                            $formhash{"formParts"} = $form_parts;
                                             $formhash{"probability"} = $probability + 1;
                                             push(@forms, {%formhash});
                                             $count++;
@@ -9802,12 +9747,12 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         if ($prefix == $mywords[$i]{prefix}) {
                                             my $adjsize = $#adjectives + 1;
                                             $adjectives[$adjsize]{prefix} = $prefix;
-                                            $adjectives[$adjsize]{stem}   = $form_parts;
-                                            $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
+                                            $adjectives[$adjsize]{stem} = $form_parts;
+                                            $adjectives[$adjsize]{stem} = $1 if $form_parts =~ m/$prefix(.*)$/;
                                             $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
                                             $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
                                             $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                            $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
+                                            $adjectives[$adjsize]{nid} = $mywords[$i]{nid};
                                             $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
                                             $adjectives[$adjsize]{papart} = 1;
                                         }
@@ -9819,21 +9764,21 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                         #PRETERITE-PRESENT & ANOMALOUS VERBS
                         if (($type eq "pp") || ($type eq "a")) {
-                            my $vowel       = $item->{vowel};
-                            my $boundary    = $item->{boundary};
-                            my $dental      = $item->{dental};
-                            my $ending      = $item->{ending};
-                            my $post_vowel  = $item->{postVowel};
-                            my $pre_vowel   = $item->{preVowel};
+                            my $vowel = $item->{vowel};
+                            my $boundary = $item->{boundary};
+                            my $dental = $item->{dental};
+                            my $ending = $item->{ending};
+                            my $post_vowel = $item->{postVowel};
+                            my $pre_vowel = $item->{preVowel};
                             my $form_header = $form_template_header . "$item->{paraID}";
                             $formhash{"function"} = $paraID;
                             my $probability = $prefix_count;
-                            my $form_parts  = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-$dental-$ending";
-                            my $form        = $form_parts;
-                            $form       =~ s/[0\-\n]//g;
+                            my $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-$dental-$ending";
+                            my $form = $form_parts;
+                            $form =~ s/[0\-\n]//g;
                             $form_parts =~ s/[\n]//g;
-                            $formhash{"form"}        = $form;
-                            $formhash{"formParts"}   = $form_parts;
+                            $formhash{"form"} = $form;
+                            $formhash{"formParts"} = $form_parts;
                             $formhash{"probability"} = $probability;
                             push(@forms, {%formhash});
 
@@ -9841,12 +9786,12 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                             if (($paraID =~ m/^PsPt$/i) && ($prefix == $mywords[$i]{prefix})) {
                                 my $adjsize = $#adjectives + 1;
                                 $adjectives[$adjsize]{prefix} = $prefix;
-                                $adjectives[$adjsize]{stem}   = $form_parts;
-                                $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
+                                $adjectives[$adjsize]{stem} = $form_parts;
+                                $adjectives[$adjsize]{stem} = $1 if $form_parts =~ m/$prefix(.*)$/;
                                 $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
                                 $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
                                 $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
+                                $adjectives[$adjsize]{nid} = $mywords[$i]{nid};
                                 $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
                                 $adjectives[$adjsize]{pspart} = 1;
                             }
@@ -9855,12 +9800,12 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                             if (($paraID =~ m/^PaPt$/i) && ($prefix == $mywords[$i]{prefix})) {
                                 my $adjsize = $#adjectives + 1;
                                 $adjectives[$adjsize]{prefix} = $prefix;
-                                $adjectives[$adjsize]{stem}   = $form_parts;
-                                $adjectives[$adjsize]{stem}   = $1 if $form_parts =~ m/$prefix(.*)$/;
+                                $adjectives[$adjsize]{stem} = $form_parts;
+                                $adjectives[$adjsize]{stem} = $1 if $form_parts =~ m/$prefix(.*)$/;
                                 $adjectives[$adjsize]{stem} =~ s/[0\-\n]//g;
                                 $adjectives[$adjsize]{title} = $prefix . $adjectives[$adjsize]{stem};
                                 $adjectives[$adjsize]{title} =~ s/[0\-\n]//g;
-                                $adjectives[$adjsize]{nid}    = $mywords[$i]{nid};
+                                $adjectives[$adjsize]{nid} = $mywords[$i]{nid};
                                 $adjectives[$adjsize]{wright} = $mywords[$i]{wright};
                                 $adjectives[$adjsize]{papart} = 1;
                             }
@@ -9871,12 +9816,12 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #ii -anne
                                     $formhash{"function"} = "IdIf";
-                                    $form_parts           = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-anne";
-                                    $form                 = $form_parts;
-                                    $form       =~ s/[0\-\n]//g;
+                                    $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-anne";
+                                    $form = $form_parts;
+                                    $form =~ s/[0\-\n]//g;
                                     $form_parts =~ s/[\n]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
                                 }
@@ -9884,127 +9829,69 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
 
                                     #PaInSg2 -est, es
                                     $formhash{"function"} = "PaInSg2";
-                                    $form_parts           = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-est";
-                                    $form                 = $form_parts;
-                                    $form       =~ s/[0\-\n]//g;
+                                    $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-est";
+                                    $form = $form_parts;
+                                    $form =~ s/[0\-\n]//g;
                                     $form_parts =~ s/[\n]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
                                     $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-es";
-                                    $form       = $form_parts;
-                                    $form       =~ s/[0\-\n]//g;
+                                    $form = $form_parts;
+                                    $form =~ s/[0\-\n]//g;
                                     $form_parts =~ s/[\n]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability + 1;
                                     push(@forms, {%formhash});
 
                                     #PaInSg3 -e
                                     $formhash{"function"} = "PaInSg3";
-                                    $form_parts           = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-e";
-                                    $form                 = $form_parts;
-                                    $form       =~ s/[0\-\n]//g;
+                                    $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-e";
+                                    $form = $form_parts;
+                                    $form =~ s/[0\-\n]//g;
                                     $form_parts =~ s/[\n]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
                                     #PaSuSg -e
                                     $formhash{"function"} = "PaSuSg";
-                                    $form_parts           = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-e";
-                                    $form                 = $form_parts;
-                                    $form       =~ s/[0\-\n]//g;
+                                    $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-e";
+                                    $form = $form_parts;
+                                    $form =~ s/[0\-\n]//g;
                                     $form_parts =~ s/[\n]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
 
                                     #PaSuPl -en
                                     $formhash{"function"} = "PaSuPl";
-                                    $form_parts           = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-en";
-                                    $form                 = $form_parts;
-                                    $form       =~ s/[0\-\n]//g;
+                                    $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-en";
+                                    $form = $form_parts;
+                                    $form =~ s/[0\-\n]//g;
                                     $form_parts =~ s/[\n]//g;
-                                    $formhash{"form"}        = $form;
-                                    $formhash{"formParts"}   = $form_parts;
+                                    $formhash{"form"} = $form;
+                                    $formhash{"formParts"} = $form_parts;
                                     $formhash{"probability"} = $probability;
                                     push(@forms, {%formhash});
                                 }
                             }
                         }
-
-                        #				}
                     }
                 }
             }
         }
-
     }
 }
 
 #- OUTPUT ---------------------------------------------------------------------------------------------------------------------
-# PRINT DATA OUT
-sub printout_vb_dictionary {
-    print "Printing out verbal dictionary\n";
-    my @mywords = @_;
-    for my $i (0 .. $#mywords) {
-        if (($mywords[$i]{verb} == 1) && ($mywords[$i]{pspart} + $mywords[$i]{papart} == 0)) {
-            print(OUTPUT "$mywords[$i]{title} ($mywords[$i]{nid}) / $mywords[$i]{stem} /");
-            for (my $y = 0 ; $y < @{ $mywords[$i]{vb_paradigm} } ; $y++) {
-                if ($y > 0) { print(OUTPUT "& "); }
-                print(OUTPUT "$mywords[$i]{vb_paradigm}[$y]{ID} - $mywords[$i]{vb_paradigm}[$y]{title}");
-            }
-            print(OUTPUT "/ $mywords[$i]{wright} \n");
-        }
-    }
-}
-
-sub printout_adj_dictionary {
-    print "Printing out adjectival dictionary\n";
-    my @mywords = @_;
-    for my $i (0 .. $#mywords) {
-        if ($mywords[$i]{adjective} == 1) {
-            my $y = 0;
-            my @joined_paradigms;
-            while ($mywords[$i]{adj_paradigm}[$y]) { $joined_paradigms[$y] = $mywords[$i]{adj_paradigm}[$y]; $y++; }
-            $joined_paradigms = join(", ", @joined_paradigms);
-            $mystemlength     = &stem_length($mywords[$i]{stem});
-            if ($joined_paradigms) {
-                print(OUTPUT
-"$mywords[$i]{title} / $mywords[$i]{stem} / para: $joined_paradigms / $mystemlength / $mywords[$i]{wright} \n"
-                );
-            }
-        }
-    }
-}
-
-sub printout_noun_dictionary {
-    print "Printing out nominal dictionary\n";
-    my @mywords = @_;
-    for my $i (0 .. $#mywords) {
-        if ($mywords[$i]{noun} == 1) {
-            my $y = 0;
-            my @joined_paradigms;
-            while ($mywords[$i]{noun_paradigm}[$y]) { $joined_paradigms[$y] = $mywords[$i]{noun_paradigm}[$y]; $y++; }
-            $joined_paradigms = join(", ", @joined_paradigms);
-            $mystemlength     = &stem_length($mywords[$i]{stem});
-            if ($joined_paradigms) {
-                print(OUTPUT
-"$mywords[$i]{title} / $mywords[$i]{stem} / para: $joined_paradigms / $mystemlength / $mywords[$i]{wright} \n"
-                );
-            }
-        }
-    }
-}
 
 #PRINT OUT PARADIGMS (JUST TO CHECK THE STRUCTURE)
 sub printoutparadigms {
-
-    #	dump(@vparadigms);
     print(OUTPUT);
     foreach (@vparadigms) {
         print(OUTPUT "$_->{ID} - $_->{title} - $_->{class} - $_->{subdivision} - $_->{subclass} - $_->{wright}: ");
@@ -10094,10 +9981,6 @@ print "\nSetting nominal paradigms...\n";
 print "\nNominal paradigms set in ";
 $now = time();
 print $now - $start . " seconds \n";
-
-#printout_vb_dictionary(@verbs);
-#printout_adj_dictionary(@adjectives);
-#printout_noun_dictionary(@nouns);
 
 generate_vbforms(@verbs);
 generate_adjforms(@adjectives);
