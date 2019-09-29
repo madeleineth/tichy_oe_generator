@@ -8419,7 +8419,6 @@ sub generate_vbforms {
                     unless ($name eq "variantID") {
 
                         #IF A VERB HAS A PREFIX, IT WILL RUN TWICE, ONCE WITH IT, ONCE WITHOUT
-                        my $prefix_count = 0;  # ???? Never changed.
                         my $prefix = $mywords[$i]{prefix};
                         my $variant_pfx = defined($item->{prefix}) ? $item->{prefix} : "";
                         if ($prefix ne $variant_pfx) { $prefix = $prefix . "-" . $variant_pfx; }
@@ -8709,7 +8708,7 @@ sub generate_vbforms {
                                     # and by umlaut also: PsInSg2, PsInSg3
                                     my @mvowels = &iumlaut($vowel[$vcount]);
                                     for (my $mvowel_count = 0 ; $mvowel_count < @mvowels ; $mvowel_count++) {
-                                        $probability = $prefix_count + $mvowel_count;
+                                        $probability = $mvowel_count;
                                         my $mvowel = $mvowels[$mvowel_count];
 
                                         #PsInSg2 -st, -stu, -est, -ist, -s
@@ -8887,7 +8886,7 @@ sub generate_vbforms {
                                         }
                                     }
                                 }
-                                $probability = $prefix_count;
+                                $probability = 0;
 
                                 #from PaInSg1 we generate: PaInSg3
                                 if ($paraID =~ m/^painsg1$/i) {
@@ -8959,7 +8958,7 @@ sub generate_vbforms {
                                 my $post_vowel = $item->{postVowel};
                                 my $pre_vowel = $item->{preVowel};
                                 $formhash{"function"} = $paraID;
-                                my $probability = $prefix_count;
+                                my $probability = 0;
                                 my $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-$dental-$ending";
                                 my $form = $form_parts;
                                 $form =~ s/[0\-\n]//g;
@@ -9564,7 +9563,7 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                             my $post_vowel = defined($item->{postVowel}) ? $item->{postVowel} : "";
                             my $pre_vowel = defined($item->{preVowel}) ? $item->{preVowel} : "";
                             $formhash{"function"} = $paraID;
-                            my $probability = $prefix_count;
+                            my $probability = 0;
                             my $form_parts = "$prefix-$pre_vowel-$vowel-$post_vowel-$boundary-$dental-$ending";
                             my $form = $form_parts;
                             $form =~ s/[0\-\n]//g;
