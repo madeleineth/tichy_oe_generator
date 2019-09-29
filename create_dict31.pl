@@ -1,6 +1,6 @@
 use strict;
-use warnings;
-use feature 'switch';
+use warnings FATAL => 'all';
+use experimental 'switch';
 use locale;
 use Unicode::UCD 'charinfo';
 use Encode 'decode_utf8';
@@ -59,8 +59,10 @@ sub print_manual_forms {
     my ($manual_forms_path) = @_;
     open(MANFORMS, "<:utf8:crlf", $manual_forms_path) or die "Cannot open file: $manual_forms_path";
     foreach my $forms_line (<MANFORMS>) {
-        $forms_line =~ s/\n//;
+        print STDERR "orig formsline:'$forms_line'\n";
+        chomp $forms_line;
         $forms_line = move_accents(eth2thorn($forms_line));
+        print STDERR "formsline:'$forms_line'\n";
         my @splitarray = split(/\t/, $forms_line);
         my %form = ();
         $form{BT}    = $splitarray[0];
