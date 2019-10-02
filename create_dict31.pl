@@ -9909,6 +9909,12 @@ sub print_one_form {
     }
 }
 
+sub usage {
+    print STDERR
+      "$0 [--dictionary ...] [--manual-forms ...] [--verbal-paradigms ...] [--prefixes ...] [--output ...] [--help]\n";
+    exit 0;
+}
+
 #- RUN THE SUBROUTINES ------------------------------------------------------------------------------------------
 
 my %files = (
@@ -9918,7 +9924,10 @@ my %files = (
     'prefixes' => "prefixes.txt",
     'output' => "output.txt"
 );
-GetOptions(\%files, 'dictionary=s', 'manual-forms=s', 'verbal-paradigms=s', 'prefixes=s', 'output=s');
+GetOptions(\%files, 'dictionary=s', 'manual-forms=s', 'verbal-paradigms=s', 'prefixes=s', 'output=s',
+    'help|helpe|helpes');
+
+usage() if $files{help};
 
 $start = time();
 print "\nOpening files...\n";
