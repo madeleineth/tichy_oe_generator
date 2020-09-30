@@ -751,7 +751,7 @@ sub set_verb_paradigm {
     @verbs_mywords = @unassigned_verbs_mywords;
     undef(@unassigned_verbs_mywords);
 
-   #THE REST OF THE STRONG VERBS ARE ASSIGNED TO HELPAN, ALL OTHER TO DÉMAN - mostly variants of already assigned verbs
+    #THE REST OF THE STRONG VERBS ARE ASSIGNED TO HELPAN, ALL OTHER TO DÉMAN - mostly variants of already assigned verbs
     for $i (0 .. $#verbs_mywords) {
         unless ($verbs_mywords[$i]{vb_paradigm}[0]) {
             if ($verbs_mywords[$i]{vb_strong} == 1) { $assigned_paradigm = 13; }
@@ -966,27 +966,27 @@ sub set_noun_paradigm {
             when (/356/) { $mynouns[$i]{noun_paradigm}[$counter] = "cynn"; $counter++; }    #CYNN
             when (/343|349|348/) { $mynouns[$i]{noun_paradigm}[$counter] = "word"; $counter++; continue; }    # WORD
             when (/344|350|357|393|358/) { $mynouns[$i]{noun_paradigm}[$counter] = "hof"; $counter++; continue; }  # HOF
-            when (/336/) { $mynouns[$i]{noun_paradigm}[$counter] = "d\x{00E6}g"; $counter++; continue; }    # DÆG
-            when (/345/) { $mynouns[$i]{noun_paradigm}[$counter] = "f\x{00E6}t"; $counter++; continue; }    # FÆT
+            when (/336/) { $mynouns[$i]{noun_paradigm}[$counter] = "d\x{00E6}g"; $counter++; continue; }           # DÆG
+            when (/345/) { $mynouns[$i]{noun_paradigm}[$counter] = "f\x{00E6}t"; $counter++; continue; }           # FÆT
             when (/367|368|373|376|390|366|372|370|375|378/) {
                 $mynouns[$i]{noun_paradigm}[$counter] = "\x{00E1}r";
                 $counter++;
                 continue;
-            }                                                                                               # ÁR
-            when (/383/) { $mynouns[$i]{noun_paradigm}[$counter] = "strengu"; $counter++; continue; }       # STRENGU
-            when (/397/) { $mynouns[$i]{noun_paradigm}[$counter] = "feld"; $counter++; continue; }          # FELD
-            when (/398/) { $mynouns[$i]{noun_paradigm}[$counter] = "hand"; $counter++; continue; }          # HAND
-            when (/396/) { $mynouns[$i]{noun_paradigm}[$counter] = "sunu"; $counter++; continue; }          # SUNU
-            when (/398/) { $mynouns[$i]{noun_paradigm}[$counter] = "duru"; $counter++; continue; }          # DURU
-            when (/359|360/) { $mynouns[$i]{noun_paradigm}[$counter] = "bearu"; $counter++; continue; }     # BEARU
-            when (/362|363/) { $mynouns[$i]{noun_paradigm}[$counter] = "bealu"; $counter++; continue; }     # BEALU
-            when (/3]80|381/) { $mynouns[$i]{noun_paradigm}[$counter] = "beadu"; $counter++; continue; }    # BEADU
-            when (/401/) { $mynouns[$i]{noun_paradigm}[$counter] = "guma"; $counter++; continue; }          # GUMA
-            when (/402/) { $mynouns[$i]{noun_paradigm}[$counter] = "fr\x{00E9}a"; $counter++; continue; }   # FRÉA
-            when (/404/) { $mynouns[$i]{noun_paradigm}[$counter] = "tunge"; $counter++; continue; }         # TUNGE
-            when (/405/) { $mynouns[$i]{noun_paradigm}[$counter] = "b\x{00E9}o"; $counter++; continue; }    # BÉO
-            when (/407/) { $mynouns[$i]{noun_paradigm}[$counter] = "\x{00E9}age"; $counter++; continue; }   # ÉAGE
-            when (/418/) { $mynouns[$i]{noun_paradigm}[$counter] = "w\x{00ED}gend"; $counter++; continue; } # WÍGEND
+            }                                                                                                      # ÁR
+            when (/383/) { $mynouns[$i]{noun_paradigm}[$counter] = "strengu"; $counter++; continue; }    # STRENGU
+            when (/397/) { $mynouns[$i]{noun_paradigm}[$counter] = "feld"; $counter++; continue; }       # FELD
+            when (/398/) { $mynouns[$i]{noun_paradigm}[$counter] = "hand"; $counter++; continue; }       # HAND
+            when (/396/) { $mynouns[$i]{noun_paradigm}[$counter] = "sunu"; $counter++; continue; }       # SUNU
+            when (/398/) { $mynouns[$i]{noun_paradigm}[$counter] = "duru"; $counter++; continue; }       # DURU
+            when (/359|360/) { $mynouns[$i]{noun_paradigm}[$counter] = "bearu"; $counter++; continue; }  # BEARU
+            when (/362|363/) { $mynouns[$i]{noun_paradigm}[$counter] = "bealu"; $counter++; continue; }  # BEALU
+            when (/3]80|381/) { $mynouns[$i]{noun_paradigm}[$counter] = "beadu"; $counter++; continue; } # BEADU
+            when (/401/) { $mynouns[$i]{noun_paradigm}[$counter] = "guma"; $counter++; continue; }       # GUMA
+            when (/402/) { $mynouns[$i]{noun_paradigm}[$counter] = "fr\x{00E9}a"; $counter++; continue; }    # FRÉA
+            when (/404/) { $mynouns[$i]{noun_paradigm}[$counter] = "tunge"; $counter++; continue; }          # TUNGE
+            when (/405/) { $mynouns[$i]{noun_paradigm}[$counter] = "b\x{00E9}o"; $counter++; continue; }     # BÉO
+            when (/407/) { $mynouns[$i]{noun_paradigm}[$counter] = "\x{00E9}age"; $counter++; continue; }    # ÉAGE
+            when (/418/) { $mynouns[$i]{noun_paradigm}[$counter] = "w\x{00ED}gend"; $counter++; continue; }  # WÍGEND
         }
         if ($counter) { push(@assigned_nouns, $mynouns[$i]); }
     }
@@ -9504,7 +9504,7 @@ m/[\x{00E6}aeyou\x{00C6}AEIYOU\x{01FD}\x{00E1}\x{00E9}\x{00ED}\x{00FD}\x{00F3}\x
                                         $count++;
                                     }
 
-                        #PsInSg3 -eþ, -ieþ, -iþ, -þ (sealfian and those manually defined have -aþ in the para dict)
+                             #PsInSg3 -eþ, -ieþ, -iþ, -þ (sealfian and those manually defined have -aþ in the para dict)
                                     $formhash{"function"} = "PsInSg3";
                                     $form_parts = "$prefix-$pre_vowel-$vowel[0]-$post_vowel-$boundary-e\x{00FE}";
                                     $form = $form_parts;
