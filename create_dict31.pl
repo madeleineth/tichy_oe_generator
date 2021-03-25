@@ -265,7 +265,7 @@ sub count_syllables {
     my $counter = 0;
     for my $i (0 .. $#mywords) {
         $counter = ($mywords[$i]{stem} =~ s/($vowel_regex$consonant_regex)/$1/g)
-          ;                                              #how many times vowel+consonant combination appears in stem
+          ;    #how many times vowel+consonant combination appears in stem
         $counter = $counter +
           ($mywords[$i]{stem} =~ s/($vowel_regex)$/$1/g);    #plus the final vowel, if there is one = syllable count
         if ($mywords[$i]{stem} !~ m/$consonant_regex/) { $counter = 1; }   #if there is no consonant, syllable count = 1
@@ -896,13 +896,13 @@ sub set_adj_paradigm {
 
                             # MONOSYLLABIC LONG STEM ENDING IN -Vh!
                             $mywords[$i]{adj_paradigm}[$counter] = "h\x{00E9}ah";
-                            $counter++;                                                       #HEAH
+                            $counter++;    #HEAH
                         }
                         elsif ($mywords[$i]{stem} =~ m/($consonant_regex)h$/) {
 
                             # MONOSYLLABIC LONG STEM ENDING IN -Ch!
                             $mywords[$i]{adj_paradigm}[$counter] = "\x{00FE}weorh";
-                            $counter++;                                                       #THWEORH
+                            $counter++;    #THWEORH
                         }
                         else { $mywords[$i]{adj_paradigm}[$counter] = "blind"; $counter++; }    #BLIND
                     }
