@@ -213,17 +213,17 @@ sub iumlaut {
     $myvowels[0] =~ s/^u$/y/;    # u > y
     $myvowels[0] =~ s/^\x{00E6}$/e/;    # æ > e
     if ($myvowels[0] =~ s/^a$/\x{00E6}/) { $myvowels[2] = "e"; }    # a > æ (later e)
-    $myvowels[0] =~ s/^\x{00E1}$/\x{001FD}/;                        # á > ǽ
-    $myvowels[0] =~ s/^\x{00F3}$/\x{00E9}/;                         # ó > é
-    $myvowels[0] =~ s/^\x{00FA}$/\x{00FD}/;                         # ú > ý
-    if ($myvowels[1] =~ s/^ea$/ie/) { $myvowels[2] = "i"; }         # ea > ie (later > i,y)
+    $myvowels[0] =~ s/^\x{00E1}$/\x{001FD}/;    # á > ǽ
+    $myvowels[0] =~ s/^\x{00F3}$/\x{00E9}/;    # ó > é
+    $myvowels[0] =~ s/^\x{00FA}$/\x{00FD}/;    # ú > ý
+    if ($myvowels[1] =~ s/^ea$/ie/) { $myvowels[2] = "i"; }    # ea > ie (later > i,y)
     $myvowels[0] =~ s/^eo$/ie/;    # eo > ie (does it happen? C gives > io, but weorpan > wierpst)
     if ($myvowels[0] =~ s/^io$/ie/) { $myvowels[2] = "i"; }    # io > ie (later > i,y)
 
     if ($myvowels[0] =~ s/^\x{00E9}a$/\x{00ED}e/) {
         $myvowels[2] = "\x{00ED}";
-    }                                                          # éa > íe (later > í,ý but sometimes short ie?)
-    $myvowels[0] =~ s/^\x{00E9}o$/\x{00ED}e/;                  # éo > íe (does it happen?)
+    }    # éa > íe (later > í,ý but sometimes short ie?)
+    $myvowels[0] =~ s/^\x{00E9}o$/\x{00ED}e/;    # éo > íe (does it happen?)
     if ($myvowels[0] =~ s/^[\x{00ED}]o$/\x{00ED}e/) { $myvowels[2] = "\x{00ED}"; }    # ío > íe (later > í,ý)
 
     # we return an array of vowels in mutated and non-mutated forms, 1 is unmutated
@@ -233,9 +233,9 @@ sub iumlaut {
 # MOVE ACCENTS FOR BT DIPHTHONGS
 sub move_accents {
     my $mywords = $_[0];
-    $mywords =~ s/e\x{00F3}/\x{00E9}o/g;                                              #eó > éo
-    $mywords =~ s/e\x{00E1}/\x{00E9}a/g;                                              #eá > éa
-    $mywords =~ s/i\x{00E9}/\x{00ED}e/g;                                              #ié > íe
+    $mywords =~ s/e\x{00F3}/\x{00E9}o/g;    #eó > éo
+    $mywords =~ s/e\x{00E1}/\x{00E9}a/g;    #eá > éa
+    $mywords =~ s/i\x{00E9}/\x{00ED}e/g;    #ié > íe
     return $mywords;
 }
 
@@ -255,7 +255,7 @@ m/^.*?($vowel_regex$vowel_regex?)([^\x{00E6}aeiyou\x{00C6}AEIYOU\x{01FD}\x{00E1}
 
     if (($mysecond eq "") && (length($myconsonants) > 0)) {
         $mylength = 1;
-    }                                                    #monosylabic stem ending in a consonant = long stem
+    }    #monosylabic stem ending in a consonant = long stem
     return $mylength;
 }
 
@@ -790,11 +790,11 @@ sub set_adj_paradigm {
                 }    #TIL
                 when (/426/) { $mywords[$i]{adj_paradigm}[$counter] = "blind"; $counter++; continue; }    # BLIND
                 when (/428/) { $mywords[$i]{adj_paradigm}[$counter] = "h\x{00E9}ah"; $counter++; continue; }    # HEAH
-                when (/430/) { $mywords[$i]{adj_paradigm}[$counter] = "manig"; $counter++; continue; }          # MANIG
-                when (/431/) { $mywords[$i]{adj_paradigm}[$counter] = "h\x{00E1}lig"; $counter++; continue; }   # HALIG
-                when (/434/) { $mywords[$i]{adj_paradigm}[$counter] = "wilde"; $counter++; continue; }          # WILDE
-                when (/436/) { $mywords[$i]{adj_paradigm}[$counter] = "gearu"; $counter++; continue; }          # GEARU
-                when (/437/) { $mywords[$i]{adj_paradigm}[$counter] = "blind"; $counter++; continue; }          # BLIND
+                when (/430/) { $mywords[$i]{adj_paradigm}[$counter] = "manig"; $counter++; continue; }    # MANIG
+                when (/431/) { $mywords[$i]{adj_paradigm}[$counter] = "h\x{00E1}lig"; $counter++; continue; }    # HALIG
+                when (/434/) { $mywords[$i]{adj_paradigm}[$counter] = "wilde"; $counter++; continue; }    # WILDE
+                when (/436/) { $mywords[$i]{adj_paradigm}[$counter] = "gearu"; $counter++; continue; }    # GEARU
+                when (/437/) { $mywords[$i]{adj_paradigm}[$counter] = "blind"; $counter++; continue; }    # BLIND
             }
             if ($mywords[$i]{stem} =~ m/\x{00FE}weorh$/) { $mywords[$i]{adj_paradigm}[0] = "\x{00FE}weorh"; }
         }
@@ -914,13 +914,13 @@ sub set_adj_paradigm {
 
                         # POLYSYLLABIC STEM ENDING IN -u/-o
                         $mywords[$i]{adj_paradigm}[$counter] = "gearu";
-                        $counter++;                                                             #GEARU
+                        $counter++;    #GEARU
                     }
                     elsif ($mywords[$i]{stem} =~ m/e$/) {
 
                         # POLYSYLLABIC STEM ENDING IN -e
                         $mywords[$i]{adj_paradigm}[$counter] = "wilde";
-                        $counter++;                                                             #WILDE
+                        $counter++;    #WILDE
                     }
                     else {
                         if (&stem_length($mywords[$i]{stem})) {
@@ -928,7 +928,7 @@ sub set_adj_paradigm {
                             # LONG POLYSYLLABIC STEM
                             $mywords[$i]{adj_paradigm}[$counter] = "h\x{00E1}lig";
                             $counter++;
-                        }                                                                       #HALIG
+                        }    #HALIG
 
                         # SHORT POLYSYLLABIC STEM
                         else { $mywords[$i]{adj_paradigm}[$counter] = "manig"; $counter++; }    #MANIG
@@ -966,27 +966,27 @@ sub set_noun_paradigm {
             when (/356/) { $mynouns[$i]{noun_paradigm}[$counter] = "cynn"; $counter++; }    #CYNN
             when (/343|349|348/) { $mynouns[$i]{noun_paradigm}[$counter] = "word"; $counter++; continue; }    # WORD
             when (/344|350|357|393|358/) { $mynouns[$i]{noun_paradigm}[$counter] = "hof"; $counter++; continue; }  # HOF
-            when (/336/) { $mynouns[$i]{noun_paradigm}[$counter] = "d\x{00E6}g"; $counter++; continue; }           # DÆG
-            when (/345/) { $mynouns[$i]{noun_paradigm}[$counter] = "f\x{00E6}t"; $counter++; continue; }           # FÆT
+            when (/336/) { $mynouns[$i]{noun_paradigm}[$counter] = "d\x{00E6}g"; $counter++; continue; }    # DÆG
+            when (/345/) { $mynouns[$i]{noun_paradigm}[$counter] = "f\x{00E6}t"; $counter++; continue; }    # FÆT
             when (/367|368|373|376|390|366|372|370|375|378/) {
                 $mynouns[$i]{noun_paradigm}[$counter] = "\x{00E1}r";
                 $counter++;
                 continue;
-            }                                                                                                      # ÁR
+            }    # ÁR
             when (/383/) { $mynouns[$i]{noun_paradigm}[$counter] = "strengu"; $counter++; continue; }    # STRENGU
-            when (/397/) { $mynouns[$i]{noun_paradigm}[$counter] = "feld"; $counter++; continue; }       # FELD
-            when (/398/) { $mynouns[$i]{noun_paradigm}[$counter] = "hand"; $counter++; continue; }       # HAND
-            when (/396/) { $mynouns[$i]{noun_paradigm}[$counter] = "sunu"; $counter++; continue; }       # SUNU
-            when (/398/) { $mynouns[$i]{noun_paradigm}[$counter] = "duru"; $counter++; continue; }       # DURU
-            when (/359|360/) { $mynouns[$i]{noun_paradigm}[$counter] = "bearu"; $counter++; continue; }  # BEARU
-            when (/362|363/) { $mynouns[$i]{noun_paradigm}[$counter] = "bealu"; $counter++; continue; }  # BEALU
-            when (/3]80|381/) { $mynouns[$i]{noun_paradigm}[$counter] = "beadu"; $counter++; continue; } # BEADU
-            when (/401/) { $mynouns[$i]{noun_paradigm}[$counter] = "guma"; $counter++; continue; }       # GUMA
+            when (/397/) { $mynouns[$i]{noun_paradigm}[$counter] = "feld"; $counter++; continue; }    # FELD
+            when (/398/) { $mynouns[$i]{noun_paradigm}[$counter] = "hand"; $counter++; continue; }    # HAND
+            when (/396/) { $mynouns[$i]{noun_paradigm}[$counter] = "sunu"; $counter++; continue; }    # SUNU
+            when (/398/) { $mynouns[$i]{noun_paradigm}[$counter] = "duru"; $counter++; continue; }    # DURU
+            when (/359|360/) { $mynouns[$i]{noun_paradigm}[$counter] = "bearu"; $counter++; continue; }    # BEARU
+            when (/362|363/) { $mynouns[$i]{noun_paradigm}[$counter] = "bealu"; $counter++; continue; }    # BEALU
+            when (/3]80|381/) { $mynouns[$i]{noun_paradigm}[$counter] = "beadu"; $counter++; continue; }    # BEADU
+            when (/401/) { $mynouns[$i]{noun_paradigm}[$counter] = "guma"; $counter++; continue; }    # GUMA
             when (/402/) { $mynouns[$i]{noun_paradigm}[$counter] = "fr\x{00E9}a"; $counter++; continue; }    # FRÉA
-            when (/404/) { $mynouns[$i]{noun_paradigm}[$counter] = "tunge"; $counter++; continue; }          # TUNGE
-            when (/405/) { $mynouns[$i]{noun_paradigm}[$counter] = "b\x{00E9}o"; $counter++; continue; }     # BÉO
+            when (/404/) { $mynouns[$i]{noun_paradigm}[$counter] = "tunge"; $counter++; continue; }    # TUNGE
+            when (/405/) { $mynouns[$i]{noun_paradigm}[$counter] = "b\x{00E9}o"; $counter++; continue; }    # BÉO
             when (/407/) { $mynouns[$i]{noun_paradigm}[$counter] = "\x{00E9}age"; $counter++; continue; }    # ÉAGE
-            when (/418/) { $mynouns[$i]{noun_paradigm}[$counter] = "w\x{00ED}gend"; $counter++; continue; }  # WÍGEND
+            when (/418/) { $mynouns[$i]{noun_paradigm}[$counter] = "w\x{00ED}gend"; $counter++; continue; }    # WÍGEND
         }
         if ($counter) { push(@assigned_nouns, $mynouns[$i]); }
     }
@@ -8493,7 +8493,8 @@ sub generate_vbforms {
                             }
                             else { $post_vowel = ""; }
                         }
-                        elsif (($item->{postVowel})
+                        elsif (
+                               ($item->{postVowel})
                             && ($mywords[$i]{stem} =~ m/$vowel_regex$vowel_regex*?($consonant_regex.*?)$vowel_regex+n$/)
                           )
                         {
